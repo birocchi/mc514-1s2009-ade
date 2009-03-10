@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <malloc.h>
+#include "matriz.h"
 
 /* Aloca memoria para uma matriz de tamanho recebido como parametro.
  * -Parametros: Numero de linhas, Numero de colunas, Endereço da variavel
@@ -66,6 +64,7 @@ int Inicializa_Matriz(int num_lin, int num_col, char **Matriz){
 
 
 /*--Main para teste das funcoes--*/
+/*
 int main (){
 
   int Lin = 5;
@@ -89,3 +88,4 @@ int main (){
   Apaga_Matriz(Lin,&Matriz);
   return 0;
 }
+*/

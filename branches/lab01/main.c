@@ -1,36 +1,31 @@
 #include <stdio.h>
 #include <pthread.h>
 
-#define LINHAS   10
-#define COLUNAS  10
+
+#include "matriz.h"
 
 
 int main () {
 
-  /* Matrizes que representam o tabuleiro em seu
-     estado atual e seu proximo estado. */
+  int Lin = 5;
+  int Col = 5;
+  char **Matriz;
 
-  char tab0[LINHAS][COLUNAS], tab1[LINHAS][COLUNAS];
+  Cria_Matriz(Lin,Col,&Matriz);
+  printf("Matriz %d x %d criada\n", Lin, Col);
+  Inicializa_Matriz(Lin,Col,Matriz);
+  Imprime_Matriz(Lin,Col,Matriz);
 
+  Matriz[0][0] = '#';
+  Matriz[1][1] = '#';
+  Matriz[2][2] = '#';
+  Matriz[3][3] = '#';
+  Matriz[4][4] = '#';
 
-  /* n_thr <- max{LINHAS, COLUNAS}
-     n_thr <- min{n_thr, PTHREAD_THREADS_MAX}  */
+  printf("\n");
+  Imprime_Matriz(Lin,Col,Matriz);
 
-  int n_thr;
-
-  if (LINHAS>COLUNAS) n_thr = LINHAS;
-  else n_thr = COLUNAS;
-
-  if (n_thr>PTHREAD_THREADS_MAX) n_thr = PTHREAD_THREADS_MAX;
-  
-  /*
-    n_thr eh o controle do numero de threads que
-    rodarao simultaneamente
-   */
-
-
-
-
+  Apaga_Matriz(Lin,&Matriz);
 
   return(0);
 
