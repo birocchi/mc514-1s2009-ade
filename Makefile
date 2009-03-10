@@ -1,6 +1,9 @@
+main: main.c matriz.o
+	gcc -Wall -g matriz.o main.c -o main
 
-all:
-	gcc -Wall -g -o jogovida funcoes.c main.c jogovida.c
+matriz.o: matriz.h matriz.c
+	gcc -Wall -g -c matriz.c 
 
 clean:
-	rm jogovida
+	rm -f *.o main
+	clear
