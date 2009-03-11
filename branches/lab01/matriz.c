@@ -4,7 +4,7 @@
  * -Parametros: Numero de linhas, Numero de colunas, Endereço da variavel
  * que armazenara a matriz.
  */
-int Cria_Matriz(int num_lin, int num_col, char ***Matriz){
+int Aloca_Matriz(int num_lin, int num_col, char ***Matriz){
 
   int i;
 
@@ -13,7 +13,7 @@ int Cria_Matriz(int num_lin, int num_col, char ***Matriz){
     (*Matriz)[i]= (char*)malloc(sizeof(char)*num_col);
 
   if(Matriz == NULL){
-    printf("Erro ao alocar memória");
+    printf("Erro ao alocar memória\n");
     return 1;
   }
   else{
@@ -71,7 +71,7 @@ int main (){
   int Col = 5;
   char **Matriz;
 
-  Cria_Matriz(Lin,Col,&Matriz);
+  Aloca_Matriz(Lin,Col,&Matriz);
   printf("Matriz %d x %d criada\n", Lin, Col);
   Inicializa_Matriz(Lin,Col,Matriz);
   Imprime_Matriz(Lin,Col,Matriz);
