@@ -1,6 +1,23 @@
 #define HOR 10
 #define VER 10
 
+int Calcula_Threads(int lin, int col){
+
+  int i;
+
+  /* Calculo de n_thr inicial
+     n_thr <- max{LINHAS, COLUNAS}
+     n_thr <- min{n_thr, PTHREAD_THREADS_MAX}  */
+  
+  if (lin>col) i = lin;
+  else i = col;
+  
+  if (i>PTHREAD_THREADS_MAX) n_thr = PTHREAD_THREADS_MAX;
+  
+  return(i);
+}
+
+
 
 void calcula_prox(int * linha, int * prox_linha){
   

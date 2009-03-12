@@ -36,9 +36,11 @@ int Apaga_Matriz(int num_linhas, char ***Matriz){
 }
 
 
-int Imprime_Matriz(int num_lin, int num_col, char **Matriz){
+int Imprime_Matriz(int num_lin, int num_col, char **Matriz, int estado){
   
   int i,j;
+
+  printf("Tabuleiro %d:\n\n", estado);
 
   for(i=0; i<num_lin; i++){
     for(j=0; j<num_col; j++){
