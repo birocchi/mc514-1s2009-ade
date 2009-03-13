@@ -3,7 +3,7 @@
 
 
 #include "matriz.h"
-#include "threads.h"
+/*#include "threads.h"*/
 #include "interface.h"
 
 
@@ -11,7 +11,6 @@ int main(int argc, char *argv[]) {
 
   int Linhas, Colunas, i, j;
   char **tab0, **tab1; /* matrizes que representam o tabuleiro */
-  int n0; /* numero inicial de celulas vivas, obtido na interface */
   int n_thr; /* n de threads que serao executadas simultaneamente */
   char **tmp;
   int *cel_vivas; /* vetor com os indices das celulas vivas */
@@ -27,7 +26,7 @@ int main(int argc, char *argv[]) {
   }
   else{
     /* entrada via arquivo */
-    if(argc==2) Interface_arq(argv[], &Linhas, &Colunas, &i, &cel_vivas);
+    if(argc==2) return(0);/*Interface_arq(*argv, &Linhas, &Colunas, &i, &cel_vivas);*/
     /* entrada por linha de comando ou padrao */
     else 
       if(Interface(&Linhas, &Colunas, &i, &cel_vivas)) return(0); 
@@ -49,8 +48,16 @@ int main(int argc, char *argv[]) {
   /* Imprime o tabuleiro inicial */
   j=0;
   Imprime_Matriz(Linhas,Colunas,tab0,j);
+
+  /* !!! TESTE !!! */
+  Desaloca_Matriz(Linhas,&tab0);
+  Desaloca_Matriz(Linhas,&tab1);
+  return(0);
+  /* !!! TESTE !!! */
+
    
-  n_thr=Calcula_Threads(Linhas,Colunas); /* threads.h */
+  /*n_thr=Calcula_Threads(Linhas,Colunas);*/ /* threads.h */
+
 
   for(j=1;j<=i;j++){
     
@@ -68,7 +75,7 @@ int main(int argc, char *argv[]) {
     
     
   }
-  
+
   return(0);
 
 }
