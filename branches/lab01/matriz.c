@@ -25,7 +25,7 @@ int Aloca_Matriz(int num_lin, int num_col, char ***Matriz){
 /* Desaloca uma matriz criada na memoria.
  * -Parametros: Numero de linhas, Endereco da variavel que guarda a matriz
  */
-int Apaga_Matriz(int num_linhas, char ***Matriz){
+int Desaloca_Matriz(int num_linhas, char ***Matriz){
 
   int i;
 

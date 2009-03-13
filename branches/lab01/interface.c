@@ -1,13 +1,13 @@
 #include "interface.h"
 
 /* Leitura da entrada via Arquivo */
-void Interface_arq(char **argv, int *Linhas, int *Colunas, int *i, Par *cel_vivas){
+void Interface_arq(char **argv, int *Linhas, int *Colunas, int *i, int **cel_vivas){
 
   FILE *arq_in;
 
 
   /* abre arquivo (string em argv[1]) */
-  arq_in=fopen(argv[1], r);
+  arq_in=fopen(argv[1], "r");
 
   /* le linhas, colunas e numero de iteracoes do arquivo */
   
@@ -27,7 +27,7 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     printf("(l)inha de comando\n");
     printf("(d)efault  [entrada padrao atribuida pelo programa]\n");
     printf("(s)air\n");
-    scanf("%c", c);
+    scanf("%c", &c);
   } while(c!='l' && c!='d' && c!='s');
 
 
@@ -51,26 +51,40 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     *cel_vivas=(int *)malloc(sizeof(int)*27);
 
     (*cel_vivas)[0]=13;
-    /* LINHA         COLUNA  */
-    (*cel_vivas)[1]=10 ; (*cel_vivas)[2]=10 ;
-    (*cel_vivas)[3]=10 ; (*cel_vivas)[4]=11 ;
-    (*cel_vivas)[5]=10 ; (*cel_vivas)[6]=12 ;
-    (*cel_vivas)[7]=10 ; (*cel_vivas)[8]=14 ;
-    (*cel_vivas)[9]=11 ; (*cel_vivas)[10]=10;
-    (*cel_vivas)[11]=12; (*cel_vivas)[12]=13;
-    (*cel_vivas)[13]=12; (*cel_vivas)[14]=14;
-    (*cel_vivas)[15]=13; (*cel_vivas)[16]=11;
-    (*cel_vivas)[17]=13; (*cel_vivas)[18]=12;
-    (*cel_vivas)[19]=13; (*cel_vivas)[20]=14;
-    (*cel_vivas)[21]=14; (*cel_vivas)[22]=10;
-    (*cel_vivas)[23]=14; (*cel_vivas)[24]=12;
-    (*cel_vivas)[25]=14; (*cel_vivas)[26]=14;
+    (*cel_vivas)[1]=10 ;  /* Linha - Celula 1 */
+    (*cel_vivas)[2]=10 ;  /* Coluna - Celula 1 */
+    (*cel_vivas)[3]=10 ;  /* Cel2 */
+    (*cel_vivas)[4]=11 ;
+    (*cel_vivas)[5]=10 ;  /* Cel3 */
+    (*cel_vivas)[6]=12 ;
+    (*cel_vivas)[7]=10 ;  /* ... */
+    (*cel_vivas)[8]=14 ;
+    (*cel_vivas)[9]=11 ;  
+    (*cel_vivas)[10]=10;
+    (*cel_vivas)[11]=12;  
+    (*cel_vivas)[12]=13;
+    (*cel_vivas)[13]=12;  
+    (*cel_vivas)[14]=14;
+    (*cel_vivas)[15]=13;  
+    (*cel_vivas)[16]=11;
+    (*cel_vivas)[17]=13;  
+    (*cel_vivas)[18]=12;
+    (*cel_vivas)[19]=13;  
+    (*cel_vivas)[20]=14;
+    (*cel_vivas)[21]=14;  
+    (*cel_vivas)[22]=10;
+    (*cel_vivas)[23]=14;  
+    (*cel_vivas)[24]=12;
+    (*cel_vivas)[25]=14;  
+    (*cel_vivas)[26]=14;
 
 
   }/* fim do switch */
 
   return(0);
 }
+
+
 
 
 void Inicia_tab0(int lin, int col, char **tab0, int cel_vivas[]) {
@@ -84,7 +98,7 @@ void Inicia_tab0(int lin, int col, char **tab0, int cel_vivas[]) {
   }
 
   /* Insere as celulas vivas */
-  for(i=1;i<=cel_vivas[0];i+=2){
+  for(i=1;i<=2*cel_vivas[0];i+=2){
     tab0[ cel_vivas[i] ][ cel_vivas[i+1] ]='#';
   }
 
