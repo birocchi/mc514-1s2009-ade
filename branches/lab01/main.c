@@ -7,18 +7,32 @@
 #include "interface.h"
 
 
-int main () {
+int main(int argc, char *argv[]) {
 
   int Linhas, Colunas, i, j;
   char **tab0, **tab1; /* matrizes que representam o tabuleiro */
   int n0; /* numero inicial de celulas vivas, obtido na interface */
   int n_thr; /* n de threads que serao executadas simultaneamente */
   char **tmp;
+  int *cel_vivas; /* vetor com os indices das celulas vivas */
 
-  /* Chamadas pra interface....
+
+  /* Chamadas da interface....
      No final, teremos o tabuleiro inicial:  numero de linhas, 
      colunas, as celulas vivas e o numero de iteracoes (i). */
-
+  
+  if(argc>2) {
+    printf("Inicie novamente com apenas um parametro de entrada.\n\n");
+    return(0);
+  }
+  else{
+    /* entrada via arquivo */
+    if(argc==2) Interface_arq(argv[], &Linhas, &Colunas, &i, &cel_vivas);
+    /* entrada por linha de comando ou padrao */
+    else 
+      if(Interface(&Linhas, &Colunas, &i, &cel_vivas)) return(0); 
+  }
+  
 
   /* Alocacao da mamoria para as matrizes */
   if( Aloca_Matriz(Linhas,Colunas,&tab0) || Aloca_Matriz(Linhas,Colunas,&tab1) ){
@@ -28,15 +42,15 @@ int main () {
   }
 
 
-  /* Inicializa matriz tab0 com os valores de entrada, ou
-   se for o caso, com os valores 'default' */
+  /* Inicializa o tabuleiro com os valores de entrada */
+  Inicia_tab0(Linhas, Colunas, tab0, cel_vivas);
 
 
   /* Imprime o tabuleiro inicial */
   j=0;
   Imprime_Matriz(Linhas,Colunas,tab0,j);
    
-  n_thr=Calcula_Threads(Linhas,Colunas);
+  n_thr=Calcula_Threads(Linhas,Colunas); /* threads.h */
 
   for(j=1;j<=i;j++){
     
