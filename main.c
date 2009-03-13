@@ -1,19 +1,23 @@
 #include <stdio.h>
 #include <pthread.h>
-
+#include <stdlib.h>
+#include <unistd.h>
 
 #include "matriz.h"
-/*#include "threads.h"*/
+#include "threads.h"
 #include "interface.h"
 
 
 int main(int argc, char *argv[]) {
 
-  int Linhas, Colunas, i, j;
+  int Linhas, Colunas, i, j, k;
   char **tab0, **tab1; /* matrizes que representam o tabuleiro */
   int n_thr; /* n de threads que serao executadas simultaneamente */
   char **tmp;
   int *cel_vivas; /* vetor com os indices das celulas vivas */
+  char **linha;
+  pthread_t thr[25]; /*fazer essa alocacao ser dinamica futuramente*/
+
 
 
   /* Chamadas da interface....
@@ -49,33 +53,59 @@ int main(int argc, char *argv[]) {
   j=0;
   Imprime_Matriz(Linhas,Colunas,tab0,j);
 
-  /* !!! TESTE !!! */
-  Desaloca_Matriz(Linhas,&tab0);
-  Desaloca_Matriz(Linhas,&tab1);
-  return(0);
-  /* !!! TESTE !!! */
+  
 
    
   /*n_thr=Calcula_Threads(Linhas,Colunas);*/ /* threads.h */
-
-
+  
+  linha = (char**) malloc(sizeof(char*)*2);
+  linha[0] = (char*) malloc(sizeof(char)*Linhas);
+  linha[1] = (char*) malloc(sizeof(char)*Linhas);
+  
   for(j=1;j<=i;j++){
     
-    /* Chamadas das threads que processarao a matriz:
-       tab0 (estado atual) -> tab1 (proximo estado)  */
+
+    /*thread:
+      parametros de entrada:
+      int * linhas, onde:
+      linhas[0] = endereço da linha da matriz a ser lida
+      linhas[1] = endereço da linha da matriz a ser escrita
+      (lembre de colocar um cast como: (void *) linhas)
+      
+      retorno: 
+      NULL (a linha a ser escrita ja foi alterada durante a execucao da thread)
+      
+      resumindo: vc vai fazer
+      int * linhas[2]
+      pthread_create(..., thread, (void*) linhas);
+    */
+    for(k=1; k<=Linhas; k++){
+      linha[0] = tab0[k];     
+      linha[1] = tab1[k];
+      pthread_create(&thr[k-1], NULL, thread, (void *) linha); 
+    }
+    
+    /*Chamadas das threads que processarao a matriz:
+      tab0 (estado atual) -> tab1 (proximo estado)  */
     
     
     /* imprime tab1*/
+    
+
     Imprime_Matriz(Linhas,Colunas,tab1,j);
     
-    
+
     tmp=tab1;
+      
     tab0=tab1; /* atualiza o estado para a proxima iteracao */
     tab1=tmp;
-    
-    
   }
-
+  
+  
+  Desaloca_Matriz(Linhas,&tab0);
+  Desaloca_Matriz(Linhas,&tab1);
+  
+  
   return(0);
 
 }

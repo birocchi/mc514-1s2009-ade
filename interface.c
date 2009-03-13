@@ -78,7 +78,6 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     (*cel_vivas)[25]=14;  
     (*cel_vivas)[26]=14;
 
-
   }/* fim do switch */
 
   return(0);
@@ -87,13 +86,13 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
 
 
 
-void Inicia_tab0(int lin, int col, char **tab0, int cel_vivas[]) {
+void Inicia_tab0(int lin, int col, char **tab0, int *cel_vivas) {
 
   int i,j;
 
   /* Insere espaco em todas as celulas */
-  for(i=0;i<lin;i++) {
-    for(j=0;j<col;j++) 
+  for(i=0;i<lin+2;i++) {
+    for(j=0;j<col+2;j++) 
       tab0[i][j]=' ';
   }
 
