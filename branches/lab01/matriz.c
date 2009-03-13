@@ -8,9 +8,9 @@ int Aloca_Matriz(int num_lin, int num_col, char ***Matriz){
 
   int i;
 
-  *Matriz = (char**)malloc(sizeof(char*)*num_lin);
-  for(i=0; i<num_lin; i++)
-    (*Matriz)[i]= (char*)malloc(sizeof(char)*num_col);
+  *Matriz = (char**)malloc(sizeof(char*)*num_lin+2);
+  for(i=0; i<num_lin+2; i++)
+    (*Matriz)[i]= (char*)malloc(sizeof(char)*num_col+2);
 
   if(Matriz == NULL){
     printf("Erro ao alocar memória\n");
@@ -29,9 +29,10 @@ int Desaloca_Matriz(int num_linhas, char ***Matriz){
 
   int i;
 
-  for(i=0; i<num_linhas; i++)
+  for(i=0; i<num_linhas+2; i++)
     free((*Matriz)[i]);
-  free(*Matriz);
+  /*free(Matriz);  //verificar se a matriz ta sendo liberada..talvez quando ele libera Matriz[0], ele ta liberando tudo?
+*/ 
   return 0;
 }
 
@@ -42,8 +43,8 @@ int Imprime_Matriz(int num_lin, int num_col, char **Matriz, int estado){
 
   printf("Tabuleiro %d:\n\n", estado);
 
-  for(i=0; i<num_lin; i++){
-    for(j=0; j<num_col; j++){
+  for(i=1; i<=num_lin; i++){
+    for(j=1; j<=num_col; j++){
       printf("|%c",Matriz[i][j]);
     }
     printf("|\n");
@@ -51,6 +52,7 @@ int Imprime_Matriz(int num_lin, int num_col, char **Matriz, int estado){
   return 0;
 }
 
+/*essa funcao nao ta sendo usada, ta ligado? :) tem outra no arquivo interface.c q a substitui!*/
 int Inicializa_Matriz(int num_lin, int num_col, char **Matriz){
   
   int i,j;
