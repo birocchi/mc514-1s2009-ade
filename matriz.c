@@ -13,8 +13,9 @@ int Aloca_Matriz(int num_lin, int num_col, char ***Matriz){
     (*Matriz)[i]= (char*)malloc(sizeof(char)*num_col+2);
 
   if(Matriz == NULL){
-    printf("Erro ao alocar memória\n");
-    return 1;
+    printf("Erro ao alocar memoria!\n");
+    printf("O programa sera finalizado...\n");
+    exit(1);
   }
   else{
     return 0;

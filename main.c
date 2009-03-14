@@ -10,40 +10,46 @@
 
 int main(int argc, char *argv[]) {
 
-  int Linhas, Colunas, i, j, k;
-  char **tab0, **tab1; /* matrizes que representam o tabuleiro */
-  int n_thr; /* n de threads que serao executadas simultaneamente */
-  char **tmp;
-  int *cel_vivas; /* vetor com os indices das celulas vivas */
-  char **linha;
-  pthread_t thr[25]; /*fazer essa alocacao ser dinamica futuramente*/
+  int Linhas, Colunas;    /* numero de linhas e colunas desejado */
+  int  i, j, k;           /* indexadores/contadores */
+  char **tab0, **tab1;    /* matrizes que representam o tabuleiro */
+  int n_thr;              /* n de threads que serao executadas simultaneamente */
+  char **tmp;             /* ?????????*/
+  int *cel_vivas;         /* vetor com os indices das celulas vivas */
+  char **linha;           /* ?????????*/
+  pthread_t thr[25];      /*fazer essa alocacao ser dinamica futuramente */
 
 
-
+  system("clear");
+  
   /* Chamadas da interface....
      No final, teremos o tabuleiro inicial:  numero de linhas, 
      colunas, as celulas vivas e o numero de iteracoes (i). */
   
+  /* Caso tenha dois parametros, sai do programa*/
   if(argc>2) {
     printf("Inicie novamente com apenas um parametro de entrada.\n\n");
     return(0);
   }
   else{
-    /* entrada via arquivo */
-    if(argc==2) return(0);/*Interface_arq(*argv, &Linhas, &Colunas, &i, &cel_vivas);*/
-    /* entrada por linha de comando ou padrao */
+    /* Caso tenha um parametro, abre o arquivo indicado para uso posterior*/
+    if(argc==2){
+      printf("Este programa ainda nao aceita parametros\n");
+      /*Interface_arq(*argv, &Linhas, &Colunas, &i, &cel_vivas);*/
+      return(0);
+    }
     else 
-      if(Interface(&Linhas, &Colunas, &i, &cel_vivas)) return(0); 
+      /* Chama o menu de interface */
+      if(Interface(&Linhas, &Colunas, &i, &cel_vivas))
+	/* Caso a funcao retorne 1, sai do programa*/
+	return(0); 
   }
   
 
-  /* Alocacao da mamoria para as matrizes */
-  if( Aloca_Matriz(Linhas,Colunas,&tab0) || Aloca_Matriz(Linhas,Colunas,&tab1) ){
-    /* Tratamento de erro na alocacao -> finaliza execucao */
-    printf("O programa sera finalizado.\n\n");
-    return(0);
-  }
-
+  /* Alocacao de memoria para as matrizes */
+  Aloca_Matriz(Linhas,Colunas,&tab0);
+  Aloca_Matriz(Linhas,Colunas,&tab1);
+      
 
   /* Inicializa o tabuleiro com os valores de entrada */
   Inicia_tab0(Linhas, Colunas, tab0, cel_vivas);
