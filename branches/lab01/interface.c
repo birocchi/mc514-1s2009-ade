@@ -1,33 +1,33 @@
 #include "interface.h"
 
-/* Leitura da entrada via Arquivo */
-void Interface_arq(char **argv, int *Linhas, int *Colunas, int *i, int **cel_vivas){
 
-  FILE *arq_in;
+void Print_intro(){
 
-
-  /* abre arquivo (string em argv[1]) */
-  arq_in=fopen(argv[1], "r");
-
-  /* le linhas, colunas e numero de iteracoes do arquivo */
-  
-
-
-  return;
+    printf("          #####################################\n");
+    printf("          ##  MC514 - Sistemas Operacionais  ##\n");
+    printf("          ##                                 ##\n");
+    printf("          ##  Laboratorio 1 - Jogo da Vida   ##\n");
+    printf("          #####################################\n\n");
+    return;
 }
-
-
 
 int Interface(int *lin, int *col, int *i, int **cel_vivas) {
 
   char c;
 
   do {
-    printf("Escolha uma opcao de entrada:\n\n");
-    printf("(l)inha de comando\n");
-    printf("(d)efault  [entrada padrao atribuida pelo programa]\n");
-    printf("(s)air\n");
+    Print_intro();
+    printf("  o----------------------------------------------------o\n");
+    printf("  |           Escolha uma opcao de entrada:            |\n");
+    printf("  |                                                    |\n");
+    printf("  | (l)inha de comando                                 |\n");
+    printf("  | (d)efault [entrada padrao atribuida pelo programa] |\n");
+    printf("  | (s)air                                             |\n");
+    printf("  o----------------------------------------------------o\n");
+    printf("  ->");
     scanf("%c", &c);
+    printf("\n");
+    system("clear");
   } while(c!='l' && c!='d' && c!='s');
 
 
@@ -35,8 +35,11 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
 
   case 's':
     return(1); /* retorno de 'erro', para finalizacao do processo */
+    break;
 
   case 'l':
+    printf("Completar com o codigo que le a linha de comando\n");
+    return 1;
 
   case 'd':
     /* ENTRADA PADRAO */
@@ -47,8 +50,11 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     /* Atribuicao das celulas vivas inicialmente */
     /* !! ATENCAO: cel_vivas[0] contem o numero de celulas vivas inicialmente!! 
        Portanto, se o vetor vai de 0 a N, cel_vivas[0]==N/2
+
+       Birocchi: Não entendi... o tamanho do vetor é n, e o numero de celular vivas
+       eh o tamanho do vetor/2 ???
      */
-    *cel_vivas=(int *)malloc(sizeof(int)*27);
+    *cel_vivas=(int *)malloc(sizeof(int)*27); /*Birocchi*/
 
     (*cel_vivas)[0]=13;
     (*cel_vivas)[1]=10 ;  /* Linha - Celula 1 */
@@ -79,13 +85,15 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     (*cel_vivas)[26]=14;
 
   }/* fim do switch */
+ 
+  
 
   return(0);
 }
 
 
 
-
+/*Birocchi: Não intendi a ideia parte de inserir as celulas vivas, por favor explique por email*/
 void Inicia_tab0(int lin, int col, char **tab0, int *cel_vivas) {
 
   int i,j;
