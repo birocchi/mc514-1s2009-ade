@@ -2,7 +2,6 @@
 #define VER 25
 
 #include "threads.h"
-
 /*
 int Calcula_Threads(int lin, int col){
 
@@ -22,12 +21,14 @@ int Calcula_Threads(int lin, int col){
 */
 
 
-void calcula_prox(char * linha, char * prox_linha){
-  
+void calcula_prox(char * linhas[4], int tam){
   int i, viz;
+  char* linha = linhas[0]; 
+  char* prox_linha = linhas[1];
+  
   /*percorre a linha, verificando suas redondezas e alterando em prox_linha o que tiver que ser alterado*/  
-  for(i=1;i<=HOR;i++){
-    viz = conta_vizinho(i, linha);
+  for(i=1;i<=tam;i++){
+    viz = conta_vizinho(i, linhas);
     if(linha[i]=='#'){
       if(viz > 3 || viz < 2)
 	prox_linha[i] = ' ';
@@ -41,20 +42,22 @@ void calcula_prox(char * linha, char * prox_linha){
 	prox_linha[i] = ' ';
     }
   }
- return; 
+  return; 
 }
 
-int conta_vizinho(int i, char*linha){
-  /*encontra-se o endereço das linhas superiores e inferiores somando ou subtraindo o numero de bytes de cada linha*/
-  char * cima = linha - sizeof(char)*(HOR+2); 
-  char * baixo = linha + sizeof(char)*(HOR+2);
+int conta_vizinho(int i, char* linhas[4]){
+  /*pega de linhas o endereço da linha atual e de suas adjacentes*/
+  char* linha = linhas[0];
+  char* cima = linhas[2]; 
+  char* baixo = linhas[3];
   int j, viz=0;
 
-  /*j recebe o valor anterior do indice atual*/
+    /*j recebe o valor anterior do indice atual*/
   j=i-1;
 
   /*verifica valor contido nas 6 casas (3 superiores e 3 inferiores) adjacentes*/
   for(;j<i+2;j++){
+  
     if(cima[j]=='#')
       viz++;
     if(baixo[j]=='#')
@@ -70,30 +73,28 @@ int conta_vizinho(int i, char*linha){
   return viz;
 }
 
+typedef struct pacote {
+  int posicao;
+  int tamanho;
+  char** tabzero;
+  char** tabum;
+} pacote_thread;
 
-void * thread(void * linhas){
-  char ** linha;
-  linha = (int**) linhas;
-  calcula_prox((char *)linha[0], (char *)linha[1]);
+void * thread(void * dados){
+  pacote_thread * ap_pacote = (pacote_thread *) dados;
+  pacote_thread pacote = *ap_pacote;
+  char* linhas[4];
+  int tam;
+  
+  linhas[0] = pacote.tabzero[pacote.posicao];
+  linhas[1] = pacote.tabum[pacote.posicao];
+  linhas[2] = pacote.tabzero[(pacote.posicao)-1];
+  linhas[3] = pacote.tabzero[(pacote.posicao)+1];
+  tam = pacote.tamanho;
+  
+  calcula_prox(linhas, tam);
   return NULL;
 }
 
-
-
-	
-  /*thread:
-parametros de entrada:
-int * linhas, onde:
-linhas[0] = endereço da linha da matriz a ser lida
-linhas[1] = endereço da linha da matriz a ser escrita
-(lembre de colocar um cast como: (void *) linhas)
-
-retorno: 
-NULL (a linha a ser escrita ja foi alterada durante a execucao da thread)
-
-resumindo: vc vai fazer
-int * linhas[2]
-pthread_create(..., thread, (void*) linhas);
-*/
 
 
