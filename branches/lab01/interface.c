@@ -45,7 +45,7 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     /* ENTRADA PADRAO */
     *lin = 25; /* Tabuleiro 25x25 */
     *col = 25;
-    *i = 20; /* 20 iteracoes */
+    *i = 5; /* n iteracoes */
 
     /* Atribuicao das celulas vivas inicialmente */
     /* !! ATENCAO: cel_vivas[0] contem o numero de celulas vivas inicialmente!! 
@@ -105,9 +105,16 @@ void Inicia_tab0(int lin, int col, char **tab0, int *cel_vivas) {
   }
 
   /* Insere as celulas vivas */
+
+  tab0[10][10] = '#';
+  tab0[11][10] = '#';
+  tab0[12][10] = '#';
+  tab0[11][9] = '#';
+  tab0[11][11] = '#';
+  /*
   for(i=1;i<=2*cel_vivas[0];i+=2){
     tab0[ cel_vivas[i] ][ cel_vivas[i+1] ]='#';
   }
-
+  */
   return;
 }
