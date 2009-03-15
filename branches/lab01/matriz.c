@@ -6,7 +6,7 @@
  */
 int Aloca_Matriz(int num_lin, int num_col, char ***Matriz){
 
-  int i;
+  int i, j;
 
   *Matriz = (char**)malloc(sizeof(char*)*num_lin+2);
   for(i=0; i<num_lin+2; i++)
@@ -18,6 +18,14 @@ int Aloca_Matriz(int num_lin, int num_col, char ***Matriz){
     exit(1);
   }
   else{
+
+    /*preenche a matriz com espacos vazios*/
+    for(i=0; i<num_lin+2; i++){
+      for(j=0; j<num_col+2; j++){
+      (*Matriz)[i][j]=' ';
+      }
+    }
+    
     return 0;
   }
 }
@@ -53,18 +61,6 @@ int Imprime_Matriz(int num_lin, int num_col, char **Matriz, int estado){
   return 0;
 }
 
-/*essa funcao nao ta sendo usada, ta ligado? :) tem outra no arquivo interface.c q a substitui!*/
-int Inicializa_Matriz(int num_lin, int num_col, char **Matriz){
-  
-  int i,j;
-
-  for(i=0; i<num_lin; i++){
-    for(j=0; j<num_col; j++){
-      Matriz[i][j]=' ';
-    }
-  }
-  return 0;
-}
 
 
 

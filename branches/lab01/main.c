@@ -7,7 +7,10 @@
 #include "threads.h"
 #include "interface.h"
 
-/*pacote com todas as informacoes que uma thread sempre quis saber pra poder modificar uma linha ou coluna da matriz*/
+#define PTHREAD_THREADS_MAX 25  /*TODO: encontrar o valor real dessa variavel*/
+
+/*pacote com todas as informacoes que uma thread sempre 
+  quis saber pra poder modificar uma linha ou coluna da matriz*/
 typedef struct pacote {
   int posicao;
   int tamanho;
@@ -19,13 +22,13 @@ typedef struct pacote {
 int main(int argc, char *argv[]) {
 
   int Linhas, Colunas;    /* numero de linhas e colunas desejado */
-  int  i, j, k;           /* indexadores/contadores */
+  int  i, j, k, l, m;           /* indexadores/contadores */
   char **tab0, **tab1;    /* matrizes que representam o tabuleiro */
   int n_thr;              /* n de threads que serao executadas simultaneamente*/
   char **tmp;
   int *cel_vivas;         /* vetor com os indices das celulas vivas */
-  pthread_t thr[25];      /* fazer essa alocacao ser dinamica futuramente */
-  pacote_thread dados[25];  /* contem as informacoes necessarias para */
+  pthread_t* thr;      
+  pacote_thread* dados;  /* contem as informacoes necessarias para a thread operar com a tabela*/
 
   system("clear");
   
@@ -57,9 +60,9 @@ int main(int argc, char *argv[]) {
   Aloca_Matriz(Linhas,Colunas,&tab0);
   Aloca_Matriz(Linhas,Colunas,&tab1);
       
-
   /* Inicializa o tabuleiro com os valores de entrada */
   Inicia_tab0(Linhas, Colunas, tab0, cel_vivas);
+
 
 
   /* Imprime o tabuleiro inicial */
@@ -69,58 +72,50 @@ int main(int argc, char *argv[]) {
   
 
    
-  /*n_thr=Calcula_Threads(Linhas,Colunas);*/ /* threads.h */
+  /*  n_thr=Calcula_Threads(Linhas,Colunas);*/ /*isso ainda nao vai ser implementado..me pergunte pq (David)*/
+  if(Linhas < PTHREAD_THREADS_MAX)
+    n_thr=Linhas;
+  else
+    n_thr=PTHREAD_THREADS_MAX;
 
-
+  thr = (pthread_t*) malloc(sizeof(pthread_t)*n_thr);
+  dados = (pacote_thread*) malloc(sizeof(pacote_thread)*n_thr);
 
 
     
   for(j=1;j<=i;j++){
     
-
-    /*thread:
-      parametros de entrada:
-      int * linhas, onde:
-      linhas[0] = endereço da linha da matriz a ser lida
-      linhas[1] = endereço da linha da matriz a ser escrita
-      (lembre de colocar um cast como: (void *) linhas)
-      
-      retorno: 
-      NULL (a linha a ser escrita ja foi alterada durante a execucao da thread)
-      
-      resumindo: vc vai fazer
-      int * linhas[2]
-      pthread_create(..., thread, (void*) linhas);
-    */
-    for(k=1; k<=Linhas; k++){
-      dados[k-1].posicao = k;
-      dados[k-1].tamanho = Linhas;
-      dados[k-1].tabzero = tab0;
-      dados[k-1].tabum = tab1;
-
-      pthread_create(&thr[k-1], NULL, thread, (void *) &dados[k-1]); 
-    }
-    
-    for(k=1; k<=Linhas; k++){
-      pthread_join(thr[k-1], NULL); 
-    }
-    /*
-    for(k=1; k<=Linhas; k++){
-      linha[0] = tab0[k];
-      linha[1] = tab1[k];
-      linha[2] = tab0[k-1];
-      linha[3] = tab0[k+1];
-      calcula_prox(linha[0], linha[1], tab0[k-1], tab0[k+1]);
-      //tab1[k] = linha[1];
-    }
-    */
     /*Chamadas das threads que processarao a matriz:
       tab0 (estado atual) -> tab1 (proximo estado)  */
     
+    l=0;   
+    for(k=1; k<=Linhas; k++){
+      l++; /*contador de threads*/
+      /*se o numero de threads lancadas for o maximo, 
+	espera elas terminarem para lancar novas*/
+      if(l == n_thr+1){
+	for(m=0; m<n_thr; m++)      
+	  pthread_join(thr[m], NULL);
+	l=1; /*reseta o contador*/
+      }
+      
+      dados[l-1].posicao = k;
+      dados[l-1].tamanho = Linhas;
+      dados[l-1].tabzero = tab0;
+      dados[l-1].tabum = tab1;
+      
+      /*cria threads para percorrer as linhas e atualiza-las (uma thread por linha)*/
+      pthread_create(&thr[l-1], NULL, thread, (void *) &dados[l-1]); 
+      
+    }
+    
+    /*aguarda o termino das threads para impressao*/    
+    for(k=1; k<=l; k++){
+      pthread_join(thr[k-1], NULL); 
+    }
+    
     
     /* imprime tab1*/
-     
-
     Imprime_Matriz(Linhas,Colunas,tab1,j);
     
     
@@ -132,7 +127,8 @@ int main(int argc, char *argv[]) {
   
   Desaloca_Matriz(Linhas,&tab0);
   Desaloca_Matriz(Linhas,&tab1);
-  
+  free(thr);
+  free(dados);
   
   return(0);
   

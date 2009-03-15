@@ -45,7 +45,7 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     /* ENTRADA PADRAO */
     *lin = 25; /* Tabuleiro 25x25 */
     *col = 25;
-    *i = 5; /* n iteracoes */
+    *i = 10; /* n iteracoes */
 
     /* Atribuicao das celulas vivas inicialmente */
     /* !! ATENCAO: cel_vivas[0] contem o numero de celulas vivas inicialmente!! 
@@ -96,13 +96,9 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
 /*Birocchi: Não intendi a ideia parte de inserir as celulas vivas, por favor explique por email*/
 void Inicia_tab0(int lin, int col, char **tab0, int *cel_vivas) {
 
-  int i,j;
+  /* Todas as celulas ja ganharam espaco quando foram alocadas, 
+     portanto aqui apenas iremos alterar as celulas com valor */
 
-  /* Insere espaco em todas as celulas */
-  for(i=0;i<lin+2;i++) {
-    for(j=0;j<col+2;j++) 
-      tab0[i][j]=' ';
-  }
 
   /* Insere as celulas vivas */
 
@@ -111,6 +107,12 @@ void Inicia_tab0(int lin, int col, char **tab0, int *cel_vivas) {
   tab0[12][10] = '#';
   tab0[11][9] = '#';
   tab0[11][11] = '#';
+
+  tab0[1][1] = '#';
+  tab0[1][2] = '#';
+  tab0[1][3] = '#';
+  tab0[2][1] = '#';
+  tab0[3][1] = '#';
   /*
   for(i=1;i<=2*cel_vivas[0];i+=2){
     tab0[ cel_vivas[i] ][ cel_vivas[i+1] ]='#';

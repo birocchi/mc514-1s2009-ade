@@ -1,24 +1,21 @@
-#define HOR 25
-#define VER 25
-
 #include "threads.h"
-/*
+
 int Calcula_Threads(int lin, int col){
 
   int i;
-*/
+
   /* Calculo de n_thr inicial
      n_thr <- max{LINHAS, COLUNAS}
      n_thr <- min{n_thr, PTHREAD_THREADS_MAX}  */
-/*  
+  
   if (lin>col) i = lin;
   else i = col;
   
-  if (i>PTHREAD_THREADS_MAX) n_thr = PTHREAD_THREADS_MAX;
+  //if (i>PTHREAD_THREADS_MAX) i = PTHREAD_THREADS_MAX;
   
   return(i);
 }
-*/
+
 
 
 void calcula_prox(char * linhas[4], int tam){
@@ -52,7 +49,7 @@ int conta_vizinho(int i, char* linhas[4]){
   char* baixo = linhas[3];
   int j, viz=0;
 
-    /*j recebe o valor anterior do indice atual*/
+  /*j recebe o valor anterior do indice atual*/
   j=i-1;
 
   /*verifica valor contido nas 6 casas (3 superiores e 3 inferiores) adjacentes*/
@@ -97,4 +94,23 @@ void * thread(void * dados){
 }
 
 
-
+void trata_bordas(int lin, int col, char **Matriz){
+  
+  /*essa funcao determina o comportamento da borda do programa. 
+    Caso ela nao exista (caso atual), basta apagar as casas criadas nela na ultima iteracao
+    Caso o tabuleiro seja "circular", deve-se passar as casas criadas na borda para os lados opostos*/
+  
+  int i;
+  /*limpa as bordas de cima e de baixo*/
+  for(i=0; i<col+2; i++){
+    Matriz[0][i] = ' ';
+    Matriz[lin+1][i] = ' ';
+  }
+  
+  /*limpa as bordas dos lados*/
+  for(i=1; i<lin+1; i++){
+    Matriz[i][0] = ' ';
+    Matriz[col+1][i] = ' ';
+  }
+  
+}
