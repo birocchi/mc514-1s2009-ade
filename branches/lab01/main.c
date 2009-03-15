@@ -118,7 +118,9 @@ int main(int argc, char *argv[]) {
     /* imprime tab1*/
     Imprime_Matriz(Linhas,Colunas,tab1,j);
     
-    
+    trata_bordas(Linhas, Colunas, tab0); /*a cada iteracao, eh necessario verificar as bordas do tabuleiro*/
+    trata_bordas(Linhas, Colunas, tab1);
+
     tmp = tab0;
     tab0=tab1; /* atualiza o estado para a proxima iteracao */
     tab1 = tmp; /*tab1 recebe antiga tab0 (que seria lixo), pra guardar as novas alteracoes*/
