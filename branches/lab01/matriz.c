@@ -40,8 +40,9 @@ int Desaloca_Matriz(int num_linhas, char ***Matriz){
 
   for(i=0; i<num_linhas+2; i++)
     free((*Matriz)[i]);
-  /*free(Matriz);  //verificar se a matriz ta sendo liberada..talvez quando ele libera Matriz[0], ele ta liberando tudo?
-*/ 
+
+  free(*Matriz);
+
   return 0;
 }
 

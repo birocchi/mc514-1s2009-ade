@@ -22,13 +22,13 @@ typedef struct pacote {
 int main(int argc, char *argv[]) {
 
   int Linhas, Colunas;    /* numero de linhas e colunas desejado */
-  int  i, j, k, l, m;           /* indexadores/contadores */
+  int  i, j, k, l, m;     /* indexadores/contadores */
   char **tab0, **tab1;    /* matrizes que representam o tabuleiro */
   int n_thr;              /* n de threads que serao executadas simultaneamente*/
   char **tmp;
   int *cel_vivas;         /* vetor com os indices das celulas vivas */
   pthread_t* thr;      
-  pacote_thread* dados;  /* contem as informacoes necessarias para a thread operar com a tabela*/
+  pacote_thread* dados;   /* contem as informacoes necessarias para a thread operar com a tabela*/
 
   system("clear");
   
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
   Aloca_Matriz(Linhas,Colunas,&tab1);
       
   /* Inicializa o tabuleiro com os valores de entrada */
-  Inicia_tab0(Linhas, Colunas, tab0, cel_vivas);
+  Inicia_tab0(tab0, cel_vivas);
 
 
 
@@ -126,9 +126,9 @@ int main(int argc, char *argv[]) {
     tab1 = tmp; /*tab1 recebe antiga tab0 (que seria lixo), pra guardar as novas alteracoes*/
   }
   
-  
-  Desaloca_Matriz(Linhas,&tab0);
-  Desaloca_Matriz(Linhas,&tab1);
+  printf("Programa terminado.\n\n");  
+  //Desaloca_Matriz(Linhas,&tab0);
+  //Desaloca_Matriz(Linhas,&tab1); /*<--- TA DANDO PAU AKI NOS FREE's*/
   free(thr);
   free(dados);
   

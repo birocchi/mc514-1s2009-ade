@@ -70,6 +70,7 @@ int conta_vizinho(int i, char* linhas[4]){
   return viz;
 }
 
+ /*Acho que ja vi esse typedef no main... dejavú ou duplicação do codigo ^^?*/
 typedef struct pacote {
   int posicao;
   int tamanho;

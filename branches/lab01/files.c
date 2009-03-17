@@ -2,7 +2,7 @@
 
 
 /* Leitura da entrada via Arquivo */
-void Interface_arq(char **argv, int *Linhas, int *Colunas, int *i, int **cel_vivas){
+void Carrega_arquivo(char **argv, int *Linhas, int *Colunas, int *i, int **cel_vivas){
 
   FILE *arq_in;
 
