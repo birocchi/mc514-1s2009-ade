@@ -14,6 +14,7 @@ void Print_intro(){
 int Interface(int *lin, int *col, int *i, int **cel_vivas) {
 
   char c;
+  int j;
 
   do {
     Print_intro();
@@ -38,8 +39,27 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     break;
 
   case 'l':
-    printf("Completar com o codigo que le a linha de comando\n");
-    return 1;
+    Print_intro();
+    printf("  Digite o numero de linhas: ");
+    scanf("%d",lin);
+    printf("  Digite o numero de colunas: ");
+    scanf("%d",col);
+    printf("  Digite o numero de geracoes: ");
+    scanf("%d",i);
+
+    /*como o tabuleiro pode estar cheio, o numero de 
+     *celulas vivas=lin*col*2(casas/celula)+1(cel_vivas[0])
+     */
+    *cel_vivas = (int*)malloc(sizeof(int)*(*lin)*(*col)*2+1);
+
+    printf("  Digite o numero de celulas vivas: ");
+    scanf("%d",&(*cel_vivas)[0]);
+    printf("  Digite as coordenadas das celulas vivas (linha,coluna):\n");
+    for(j=1; j <= ((*cel_vivas)[0]*2); j+=2){
+      printf("  ->");
+      scanf("%d,%d",&(*cel_vivas)[j],&(*cel_vivas)[j+1]);
+    }
+    return 0;
 
   case 'd':
     /* ENTRADA PADRAO */
@@ -50,12 +70,8 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     /* Atribuicao das celulas vivas inicialmente */
     /* !! ATENCAO: cel_vivas[0] contem o numero de celulas vivas inicialmente!! 
        Portanto, se o vetor vai de 0 a N, cel_vivas[0]==N/2
-
-       Birocchi: Não entendi... o tamanho do vetor é n, e o numero de celular vivas
-       eh o tamanho do vetor/2 ???
      */
-    *cel_vivas=(int *)malloc(sizeof(int)*27); /*Birocchi*/
-
+    *cel_vivas=(int *)malloc(sizeof(int)*27); 
     (*cel_vivas)[0]=13;
     (*cel_vivas)[1]=10 ;  /* Linha - Celula 1 */
     (*cel_vivas)[2]=10 ;  /* Coluna - Celula 1 */
@@ -85,38 +101,22 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     (*cel_vivas)[26]=14;
 
   }/* fim do switch */
- 
-  
 
   return(0);
 }
 
 
 
-/*Birocchi: Não intendi a ideia parte de inserir as celulas vivas, por favor explique por email*/
-void Inicia_tab0(int lin, int col, char **tab0, int *cel_vivas) {
+void Inicia_tab0 (char **tab0, int *cel_vivas) {
 
   /* Todas as celulas ja ganharam espaco quando foram alocadas, 
      portanto aqui apenas iremos alterar as celulas com valor */
 
-
+  int j;
   /* Insere as celulas vivas */
 
-  tab0[10][10] = '#';
-  tab0[11][10] = '#';
-  tab0[12][10] = '#';
-  tab0[11][9] = '#';
-  tab0[11][11] = '#';
-
-  tab0[1][1] = '#';
-  tab0[1][2] = '#';
-  tab0[1][3] = '#';
-  tab0[2][1] = '#';
-  tab0[3][1] = '#';
-  /*
-  for(i=1;i<=2*cel_vivas[0];i+=2){
-    tab0[ cel_vivas[i] ][ cel_vivas[i+1] ]='#';
+  for(j=1;j<=2*cel_vivas[0];j+=2){
+    tab0[ cel_vivas[j] ][ cel_vivas[j+1] ]='#';
   }
-  */
   return;
 }
