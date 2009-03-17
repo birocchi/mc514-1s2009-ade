@@ -7,7 +7,7 @@
 #include "threads.h"
 #include "interface.h"
 
-#define PTHREAD_THREADS_MAX 25  /*TODO: encontrar o valor real dessa variavel*/
+#define PTHREAD_THREADS_MAX 25  /* valor maximo de threads simultaneas */
 
 /*pacote com todas as informacoes que uma thread sempre 
   quis saber pra poder modificar uma linha ou coluna da matriz*/
