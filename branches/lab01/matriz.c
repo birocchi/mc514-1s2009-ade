@@ -8,9 +8,9 @@ int Aloca_Matriz(int num_lin, int num_col, char ***Matriz){
 
   int i, j;
 
-  *Matriz = (char**)malloc(sizeof(char*)*num_lin+2);
-  for(i=0; i<num_lin+2; i++)
-    (*Matriz)[i]= (char*)malloc(sizeof(char)*num_col+2);
+  *Matriz = (char**)malloc(sizeof(char*)*(num_lin+2));
+  for(i=0; i<(num_lin+2); i++)
+    (*Matriz)[i]= (char*)malloc(sizeof(char)*(num_col+2));
 
   if(Matriz == NULL){
     printf("Erro ao alocar memoria!\n");
@@ -59,6 +59,7 @@ int Imprime_Matriz(int num_lin, int num_col, char **Matriz, int estado){
     }
     printf("|\n");
   }
+  printf("\n\n");
   return 0;
 }
 

@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
   
 
    
-  /*  n_thr=Calcula_Threads(Linhas,Colunas);*/ /*isso ainda nao vai ser implementado..me pergunte pq (David)*/
+  /*  n_thr = min{Linhas,PTHREAD_THREADS_MAX */
   if(Linhas < PTHREAD_THREADS_MAX)
     n_thr=Linhas;
   else
@@ -126,9 +126,9 @@ int main(int argc, char *argv[]) {
     tab1 = tmp; /*tab1 recebe antiga tab0 (que seria lixo), pra guardar as novas alteracoes*/
   }
   
-  printf("Programa terminado.\n\n");  
-  //Desaloca_Matriz(Linhas,&tab0);
-  //Desaloca_Matriz(Linhas,&tab1); /*<--- TA DANDO PAU AKI NOS FREE's*/
+  printf("\n\nPrograma terminado.\n\n");  
+  Desaloca_Matriz(Linhas,&tab0);
+  Desaloca_Matriz(Linhas,&tab1); /*<--- TA DANDO PAU AKI NOS FREE's*/
   free(thr);
   free(dados);
   
