@@ -1,23 +1,5 @@
 #include "threads.h"
 
-int Calcula_Threads(int lin, int col){
-
-  int i;
-
-  /* Calculo de n_thr inicial
-     n_thr <- max{LINHAS, COLUNAS}
-     n_thr <- min{n_thr, PTHREAD_THREADS_MAX}  */
-  
-  if (lin>col) i = lin;
-  else i = col;
-  
-  //if (i>PTHREAD_THREADS_MAX) i = PTHREAD_THREADS_MAX;
-  
-  return(i);
-}
-
-
-
 void calcula_prox(char * linhas[4], int tam){
   int i, viz;
   char* linha = linhas[0]; 
@@ -69,14 +51,6 @@ int conta_vizinho(int i, char* linhas[4]){
   
   return viz;
 }
-
- /*Acho que ja vi esse typedef no main... dejavú ou duplicação do codigo ^^?*/
-typedef struct pacote {
-  int posicao;
-  int tamanho;
-  char** tabzero;
-  char** tabum;
-} pacote_thread;
 
 void * thread(void * dados){
   pacote_thread * ap_pacote = (pacote_thread *) dados;
