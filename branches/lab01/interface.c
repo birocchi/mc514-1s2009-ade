@@ -71,7 +71,7 @@ int Interface(int *lin, int *col, int *i, int **cel_vivas) {
     /* !! ATENCAO: cel_vivas[0] contem o numero de celulas vivas inicialmente!! 
        Portanto, se o vetor vai de 0 a N, cel_vivas[0]==N/2
      */
-    *cel_vivas=(int *)malloc(sizeof(int)*27); 
+    *cel_vivas=(int *)malloc(sizeof(int)*27);
     (*cel_vivas)[0]=13;
     (*cel_vivas)[1]=10 ;  /* Linha - Celula 1 */
     (*cel_vivas)[2]=10 ;  /* Coluna - Celula 1 */

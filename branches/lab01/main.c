@@ -9,16 +9,6 @@
 
 #define PTHREAD_THREADS_MAX 25  /* valor maximo de threads simultaneas */
 
-/*pacote com todas as informacoes que uma thread sempre 
-  quis saber pra poder modificar uma linha ou coluna da matriz*/
-typedef struct pacote {
-  int posicao;
-  int tamanho;
-  char** tabzero;
-  char** tabum;
-} pacote_thread;
-
-
 int main(int argc, char *argv[]) {
 
   int Linhas, Colunas;    /* numero de linhas e colunas desejado */
@@ -64,13 +54,10 @@ int main(int argc, char *argv[]) {
   Inicia_tab0(tab0, cel_vivas);
 
 
-
   /* Imprime o tabuleiro inicial */
   j=0;
   Imprime_Matriz(Linhas,Colunas,tab0,j);
-
   
-
    
   /*  n_thr = min{Linhas,PTHREAD_THREADS_MAX */
   if(Linhas < PTHREAD_THREADS_MAX)
@@ -81,8 +68,7 @@ int main(int argc, char *argv[]) {
   thr = (pthread_t*) malloc(sizeof(pthread_t)*n_thr);
   dados = (pacote_thread*) malloc(sizeof(pacote_thread)*n_thr);
 
-
-    
+  
   for(j=1;j<=i;j++){
     
     /*Chamadas das threads que processarao a matriz:
@@ -129,6 +115,7 @@ int main(int argc, char *argv[]) {
   printf("\n\nPrograma terminado.\n\n");  
   Desaloca_Matriz(Linhas,&tab0);
   Desaloca_Matriz(Linhas,&tab1);
+  free(cel_vivas);
   free(thr);
   free(dados);
   
