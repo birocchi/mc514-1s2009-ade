@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
   
   printf("\n\nPrograma terminado.\n\n");  
   Desaloca_Matriz(Linhas,&tab0);
-  Desaloca_Matriz(Linhas,&tab1); /*<--- TA DANDO PAU AKI NOS FREE's*/
+  Desaloca_Matriz(Linhas,&tab1);
   free(thr);
   free(dados);
   

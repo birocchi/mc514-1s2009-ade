@@ -38,7 +38,7 @@ int Desaloca_Matriz(int num_linhas, char ***Matriz){
 
   int i;
 
-  for(i=0; i<num_linhas+2; i++)
+  for(i=0; i<(num_linhas+2); i++)
     free((*Matriz)[i]);
 
   free(*Matriz);
