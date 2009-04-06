@@ -67,11 +67,11 @@ void inicializa_tabelas(int n_thr){
   n_fases=0;
   
   n=1;
-  while(n < n_thr){
+  while(n <= n_thr){
     n = n*2;
     n_fases++;
   }
-  /*n recebe a menor potencia de 2 maior que n_thr
+  /*n recebe a menor potencia de 2 maior ou igual a n_thr
    *n_fases recebe o expoente de n ( i = log2(n) )
    * */
   
