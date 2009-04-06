@@ -40,13 +40,13 @@ int futex_wake(void *addr, int n) {
 
 /* Número de vezes que uma thread deve entrar na região crítica. */
 #define N_VEZES 15
-#define N_THR 4
+
 /* Variável compartilhada */
 volatile int s = 0;
 
 /* Variáveis de controle para a final. */
 int ultimo_final = 0;
-//int interesse_final[2] = { 0, 0 };
+int interesse_final[2] = { 0, 0 };
 
 /* Variáeis de controle para a partida
    entre a thread 0 e a thread 1.      */
@@ -58,54 +58,7 @@ int interesse_01[2] = { 0, 0 };
 int ultimo_23 = 0;
 int interesse_23[2] = { 0, 0 };
 
-int penultimo[2] = {0, 0};
-int interesse_semi[4] = {0, 0, 0, 0};
-int interesse_final[2] = {0, 0};
-int ultimo = 0;
-
-/*Função que acha o rival de uma thread em uma disputa (de acordo com o id)*/
-int rival(int thr_id){
-	if(thr_id%2 == 0) /*se for par, disputa com a próxima (ex: 0 disputa com thr_id 1)*/
-		return thr_id+1;
-	else	/*caso contrário, disputa com a anterior*/
-		return thr_id-1;
-}
-
-/* Função genérica para as threads*/
-void* f_thread(void *v) {
-  int i, thr_id;
-//  int tmp;
-  thr_id = *(int *) v;
-
-  
-  for (i = 0; i < N_VEZES; i++) {
-
-    interesse_semi[thr_id] = 1;
-    penultimo[thr_id/2] = thr_id;
-
-    while (penultimo[thr_id/2] == thr_id && interesse_semi[rival(thr_id)]) ; 
-
-    sleep(1); /* Sleep entre as partidas */
-     
-    interesse_final[thr_id/2] = 1; //fix
-    ultimo = thr_id;
-    
-    while (ultimo == thr_id && interesse_final[rival(thr_id/2)]) ; 
-
-    s = thr_id;
-    sleep(1); /* Sleep entre a atribuição e a impressão */    
-    printf("Thread %d, s = %d.\n", thr_id, s); 
-
-    interesse_final[thr_id/2] = 0;    
-    interesse_semi[thr_id] = 0;
-
-    sleep(1); /* Sleep fora da região crítica */
-  }
-
-  return NULL;
-}
-
-/* Função para a thread 0*/
+/* Função para a thread 0 */
 void* f_thread_0(void *v) {
   int i;
   
@@ -225,19 +178,8 @@ void* f_thread_3(void *v) {
 
 int main() {
 
-   pthread_t thr[N_THR];
-   int i, id[N_THR];
-	   
-   for (i = 0; i < N_THR; i++) {
-  	 id[i] = i;
-     pthread_create(&thr[i], NULL, f_thread, (void*) &id[i]);
-	  }
+  pthread_t thr0, thr1, thr2, thr3;
 
-   for (i = 0; i < N_THR; i++) 
-	   pthread_join(thr[i], NULL); 
-
-
-/*
   pthread_create(&thr0, NULL, f_thread_0, NULL);
   pthread_create(&thr1, NULL, f_thread_1, NULL);
   pthread_create(&thr2, NULL, f_thread_2, NULL);
@@ -247,7 +189,7 @@ int main() {
   pthread_join(thr1, NULL); 
   pthread_join(thr2, NULL); 
   pthread_join(thr3, NULL); 
-*/
+
   return 0;
 }
 
