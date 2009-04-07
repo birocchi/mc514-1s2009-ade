@@ -33,7 +33,7 @@ int futex_wait(void *addr, int val1) {
 }
 
 /* Retorna o número de threads que foram acordadas */
-int futex_wake(voidddr, int n) {
+int futex_wake(void *addr, int n) {
     return syscall(SYS_futex, addr, FUTEX_WAKE, 
                    n, NULL, NULL, 0);
 }
@@ -139,6 +139,8 @@ void desinteressa(thr_id){
   /*acorda as threads*/
   futex_wake(&futex_addr,N_THR-1);
 
+  free(categorias);
+
 }
 
 /* Função genérica para as threads*/
@@ -177,8 +179,6 @@ void* f_thread(void *v) {
 
 int main(int argc, char *argv[]) {
 
-//  pthread_t thr0, thr1, thr2, thr3;
-  
   pthread_t *thr;
   int i, *id;
 
@@ -201,7 +201,18 @@ int main(int argc, char *argv[]) {
   for (i = 0; i < N_THR; i++) 
     pthread_join(thr[i], NULL); 
   
-  
+
+  free(thr);
+  free(id);
+
+  for(i=0 ; i<n_fases ; i++) {
+    free(interesse[i]);
+    free(ultimos[i]);
+  }
+
+  free(interesse);
+  free(ultimos);
+
   return 0;
 }
 
