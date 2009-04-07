@@ -33,7 +33,7 @@ int futex_wait(void *addr, int val1) {
 }
 
 /* Retorna o número de threads que foram acordadas */
-int futex_wake(void *addr, int n) {
+int futex_wake(voidddr, int n) {
     return syscall(SYS_futex, addr, FUTEX_WAKE, 
                    n, NULL, NULL, 0);
 }
@@ -49,7 +49,7 @@ int N_THR;
 int ** interesse;
 int ** ultimos;
 int n_fases;
-int /* * */ futex_addr=0;
+int futex_addr=0;
 
 
 /*Função que cria vetores para disputas*/
@@ -114,7 +114,7 @@ void disputa(partida, lugar){
   /* se há outra thread interessada e a thread atual declarou "último", a thread atual 
      vai dormir e esperar até que a thread que passou para a região crítica a acorde.*/
   if(ultimos[partida][lugar/2] == lugar && interesse[partida][rival(lugar)]){
-    futex_wait(&futex_addr/*[lugar]*/, /*lugar*/0);
+    futex_wait(&futex_addr, 0);
   }
   
 }
@@ -190,9 +190,7 @@ int main(int argc, char *argv[]) {
 
   thr = (pthread_t *)malloc(sizeof(pthread_t) * N_THR);
   id = (int *)malloc(sizeof(int) * N_THR);
-  /*futex_addr = (int *)malloc(sizeof(int) * N_THR);
-    for(i=0; i<N_THR; i++) futex_addr[i]=i;*/
-  
+
   inicializa_tabelas(N_THR);
   
   for (i = 0; i < N_THR; i++) {
