@@ -67,11 +67,11 @@ void inicializa_tabelas(int n_thr){
   n_fases=0;
   
   n=1;
-  while(n <= n_thr){
+  while(n < n_thr){
     n = n*2;
     n_fases++;
   }
-  /*n recebe a menor potencia de 2 maior ou igual a n_thr
+  /*n recebe a menor potencia de 2 maior a n_thr
    *n_fases recebe o expoente de n ( i = log2(n) )
    * */
   
@@ -110,7 +110,9 @@ void disputa(partida, lugar){
   interesse[partida][lugar] = 1;
   ultimos[partida][lugar/2] = lugar;
   
-  while (ultimos[partida][lugar/2] == lugar && interesse[partida][rival(lugar)]); 
+  while(ultimos[partida][lugar/2] == lugar && interesse[partida][rival(lugar)]);
+    /* se tem outra thread interessada e a thread atual declarou "último", a thread
+     atual vai dormir*/
   
 }
 
