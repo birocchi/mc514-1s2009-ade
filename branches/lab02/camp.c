@@ -49,6 +49,7 @@ int N_THR;
 int ** interesse;
 int ** ultimos;
 int n_fases;
+int /* * */ futex_addr=0;
 
 
 /*Função que cria vetores para disputas*/
@@ -110,9 +111,11 @@ void disputa(partida, lugar){
   interesse[partida][lugar] = 1;
   ultimos[partida][lugar/2] = lugar;
   
-  while(ultimos[partida][lugar/2] == lugar && interesse[partida][rival(lugar)]);
-    /* se tem outra thread interessada e a thread atual declarou "último", a thread
-     atual vai dormir*/
+  /* se há outra thread interessada e a thread atual declarou "último", a thread atual 
+     vai dormir e esperar até que a thread que passou para a região crítica a acorde.*/
+  if(ultimos[partida][lugar/2] == lugar && interesse[partida][rival(lugar)]){
+    futex_wait(&futex_addr/*[lugar]*/, /*lugar*/0);
+  }
   
 }
 
@@ -133,6 +136,9 @@ void desinteressa(thr_id){
 						 Note que essa ordem inversa eh importante pra nao dar problemas!*/
   }
   
+  /*acorda as threads*/
+  futex_wake(&futex_addr,N_THR-1);
+
 }
 
 /* Função genérica para as threads*/
@@ -151,11 +157,15 @@ void* f_thread(void *v) {
       lugar = lugar/2; /*quando passa de fase, sobe de categoria*/
     }	
     
+    /**************************/
+    /* !!! REGIÃO CRÍTICA !!! */
     /*quem ganha a disputa, ganha o premio! mudar a variavel compartilhada com o seu id!!!*/
     s = thr_id;
     sleep(1); /* Sleep entre a atribuição e a impressão */    
     printf("Thread %d, s = %d.\n", thr_id, s); 
-    
+    /* !!! REGIÃO CRÍTICA !!! */
+    /**************************/
+
     desinteressa(thr_id);  /*retira o interesse das threads para poder liberar as proximas*/
     
     sleep(1); /* Sleep fora da região crítica */
@@ -180,6 +190,8 @@ int main(int argc, char *argv[]) {
 
   thr = (pthread_t *)malloc(sizeof(pthread_t) * N_THR);
   id = (int *)malloc(sizeof(int) * N_THR);
+  /*futex_addr = (int *)malloc(sizeof(int) * N_THR);
+    for(i=0; i<N_THR; i++) futex_addr[i]=i;*/
   
   inicializa_tabelas(N_THR);
   
