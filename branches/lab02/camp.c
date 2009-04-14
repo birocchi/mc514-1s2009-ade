@@ -114,14 +114,18 @@ void disputa(partida, lugar){
 
   interesse[partida][lugar] = 1;
   ultimos[partida][lugar/2] = lugar;
+  futex_wake(&ultimos[partida][lugar/2], N_THR-1);  /*se tiver alguma thread dormindo, acorda ela, pois ja nao eh mais a ultima*/
   
   /* se as duas threads estao interessadas ao mesmo tempo, a thread que setou a variavel ultimos[partida][lugar/2] 
    * primeiro vai dormir e esperar até que a thread que passou para a região crítica a acorde.*/
-  while(interesse[partida][rival(lugar)] && ultimos[partida][lugar/2] == lugar){
-    futex_wake(&ultimos[partida][lugar/2], N_THR-1);  /*se uma thread dormiu antes, por ter chegado em primeiro, a ultima acorda ela, pra poder dormir*/
-    futex_wait(&ultimos[partida][lugar/2], lugar);
+  
+  while (interesse[partida][rival(lugar)] && (!futex_wait(&ultimos[partida][lugar/2], lugar)));//dorme enquanto a outra tiver interesse e for ultima
+	
+//  while(interesse[partida][rival(lugar)] && ultimos[partida][lugar/2] == lugar){
+//    futex_wake(&ultimos[partida][lugar/2], N_THR-1);  /*se uma thread dormiu antes, por ter chegado em primeiro, a ultima acorda ela, pra poder dormir*/
+//    futex_wait(&ultimos[partida][lugar/2], lugar);
 
-  }
+//  }
   
 }
 
