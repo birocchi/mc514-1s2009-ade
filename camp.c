@@ -1,16 +1,14 @@
 /* 
- * Campeonato entre 4 threads para acesso à região crítica.
+ * Campeonato entre N threads para acesso à região crítica.
  *
- * Modifique este código para funcionar para N threads,
- * com apenas uma função f_thread.
  *
- * Deve ser colocado um comando sleep nos seguintes pontos:
+ * Comandos sleep foram colocados nos seguintes pontos:
  *   - entre as partidas;
  *   - entre a atribuição à variável s e a impressão do
  *     valor desta variável;
  *   - fora da região crítica.  
  *
- * Substitua as esperas ocupadas por chamadas a futex_wait. 
+ * Esperas ocupadas substituidas por chamadas a futex_wait. 
  *
  */
 
@@ -49,7 +47,6 @@ int N_THR;
 int ** interesse;
 int ** ultimos;
 int n_fases;
-int futex_addr=0;
 
 
 /*Função que cria vetores para disputas*/
@@ -106,25 +103,28 @@ int rival(int thr_id){
     return thr_id-1;
 }
 
+
 void disputa(partida, lugar){
 
   interesse[partida][lugar] = 1;
   ultimos[partida][lugar/2] = lugar;
   
-  /* se há outra thread interessada e a thread atual declarou "último", a thread atual 
-     vai dormir e esperar até que a thread que passou para a região crítica a acorde.*/
-  if(ultimos[partida][lugar/2] == lugar && interesse[partida][rival(lugar)]){
-    futex_wait(&futex_addr, 0);
+  /* se as duas threads estao interessadas ao mesmo tempo, a thread que setou a variavel ultimos[partida][lugar/2] 
+   * primeiro vai dormir e esperar até que a thread que passou para a região crítica a acorde.*/
+  while(interesse[partida][rival(lugar)] && ultimos[partida][lugar/2] == lugar){
+    futex_wake(&ultimos[partida][lugar/2], N_THR-1);  /*se uma thread dormiu antes, por ter chegado em primeiro, a ultima acorda ela, pra poder dormir*/
+    futex_wait(&ultimos[partida][lugar/2], lugar);
+
   }
   
 }
 
+
 void desinteressa(thr_id){
   
   int i;
-  int *categorias;
+  int categorias[n_fases];
   
-  categorias = (int *) malloc(sizeof(int)*n_fases);
   
   for(i=n_fases-1; i>=0; i--){
     categorias[i] = thr_id; /*categorias guarda cada id q a thread teve em cada estagio do campeonato*/
@@ -132,14 +132,13 @@ void desinteressa(thr_id){
   }
   
   for(i=0; i<n_fases; i++){
-    interesse[n_fases-1-i][categorias[i]] = 0; /*retira interesses na ordem inversa em que foram colocados. 
-						 Note que essa ordem inversa eh importante pra nao dar problemas!*/
+    interesse[n_fases-1-i][categorias[i]] = 0;  
+    ultimos[n_fases-1-i][categorias[i]/2] = 0;  
+    futex_wake(&ultimos[n_fases-1-i][categorias[i]/2], N_THR-1); 
+	/*retira interesses e acorda futex's na ordem inversa em que foram colocados. 
+			 Note que essa ordem inversa eh importante pra nao dar problemas!*/
   }
   
-  /*acorda as threads*/
-  futex_wake(&futex_addr,N_THR-1);
-
-  free(categorias);
 
 }
 
@@ -195,7 +194,11 @@ int main(int argc, char *argv[]) {
   
   for (i = 0; i < N_THR; i++) {
     id[i] = i;
-    pthread_create(&thr[i], NULL, f_thread, (void*) &id[i]);
+    //pthread_create(&thr[i], NULL, f_thread, (void*) &id[i]);
+    if( pthread_create(&thr[i], NULL, f_thread, (void*) &id[i]) ){
+		printf(">>>Erro na criação da thread %d. O programa encerrará sua execução.\nPossível causa: número máximo de threads excedido!\n", i);
+		return 1;
+	}
   }
   
   for (i = 0; i < N_THR; i++) 
