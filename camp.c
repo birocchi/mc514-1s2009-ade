@@ -69,28 +69,34 @@ void inicializa_tabelas(int n_thr){
     n = n*2;
     n_fases++;
   }
-  /*n recebe a menor potencia de 2 maior a n_thr
-   *n_fases recebe o expoente de n ( i = log2(n) )
-   * */
   
   interesse = (int**) malloc(sizeof(int*)*n_fases);
   ultimos  = (int**) malloc(sizeof(int*)*n_fases);
   
-  tam = n;
+  tam = N_THR;
+  if(tam%2)
+	tam++;/*arredonda pra par, se numero de threads for impar*/
   for(i=0; i<n_fases; i++){
     interesse[i] = (int*) malloc(sizeof(int)*tam);
     ultimos[i] = (int*) malloc(sizeof(int)*tam/2);
     tam=tam/2;
+	if(tam%2)
+	  tam++;
   }
   
   /*inicializa matrizes*/
-  tam = n;
+  tam = N_THR;
+  if(tam%2)
+    tam++;
+
   for(i=0; i<n_fases; i++){
     for(j=0; j<tam; j++){
       interesse[i][j] = 0;
       ultimos[i][j/2] = 0;
     }
     tam=tam/2;
+	if(tam%2)
+      tam++;
   }
 }
 
@@ -196,7 +202,8 @@ int main(int argc, char *argv[]) {
     id[i] = i;
     //pthread_create(&thr[i], NULL, f_thread, (void*) &id[i]);
     if( pthread_create(&thr[i], NULL, f_thread, (void*) &id[i]) ){
-		printf(">>>Erro na criação da thread %d. O programa encerrará sua execução.\nPossível causa: número máximo de threads excedido!\n", i);
+		printf(">>>Erro na criação da thread %d. O programa encerrará sua execução.\n\
+>>>Possível causa: número máximo de threads excedido! Tente novamente com menos threads como parâmetro\n", i);
 		return 1;
 	}
   }
