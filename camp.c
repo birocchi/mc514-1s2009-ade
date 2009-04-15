@@ -204,7 +204,6 @@ int main(int argc, char *argv[]) {
   
   for (i = 0; i < N_THR; i++) {
     id[i] = i;
-    //pthread_create(&thr[i], NULL, f_thread, (void*) &id[i]);
     if( pthread_create(&thr[i], NULL, f_thread, (void*) &id[i]) ){
 		printf(">>>Erro na criação da thread %d. O programa encerrará sua execução.\n\
 >>>Possível causa: número máximo de threads excedido! Tente novamente com menos threads como parâmetro\n", i);

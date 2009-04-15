@@ -85,21 +85,21 @@ void* f_thread(void *v) {
 
     while (penultimo[thr_id/2] == thr_id && interesse_semi[rival(thr_id)]) ; 
 
-    sleep(1); /* Sleep entre as partidas */
+    //sleep(1); /* Sleep entre as partidas */
      
     interesse_final[thr_id/2] = 1; //fix
-    ultimo = thr_id;
+    ultimo = thr_id/2;
     
-    while (ultimo == thr_id && interesse_final[rival(thr_id/2)]) ; 
+    while (ultimo == thr_id/2 && interesse_final[rival(thr_id/2)]) ; 
 
     s = thr_id;
-    sleep(1); /* Sleep entre a atribuição e a impressão */    
+    //sleep(1); /* Sleep entre a atribuição e a impressão */    
     printf("Thread %d, s = %d.\n", thr_id, s); 
 
     interesse_final[thr_id/2] = 0;    
     interesse_semi[thr_id] = 0;
 
-    sleep(1); /* Sleep fora da região crítica */
+    //sleep(1); /* Sleep fora da região crítica */
   }
 
   return NULL;
@@ -115,7 +115,7 @@ void* f_thread_0(void *v) {
     ultimo_01 = 0;
     while (ultimo_01 == 0 && interesse_01[1]) ; 
 
-    sleep(1); /* Sleep entre as partidas */
+    //sleep(1); /* Sleep entre as partidas */
      
     interesse_final[0] = 1;
     ultimo_final = 0;
@@ -123,13 +123,13 @@ void* f_thread_0(void *v) {
     while (ultimo_final == 0 && interesse_final[1]) ; 
 
     s = 0;
-    sleep(1); /* Sleep entre a atribuição e a impressão */    
+    //sleep(1); /* Sleep entre a atribuição e a impressão */    
     printf("Thread 0, s = %d.\n", s); 
 
     interesse_final[0] = 0;    
     interesse_01[0] = 0;
 
-    sleep(1); /* Sleep fora da região crítica */
+    //sleep(1); /* Sleep fora da região crítica */
   }
 
   return NULL;
