@@ -15,6 +15,9 @@ def main():
 		print "execucao: ", i
 		for line in texto:
 			words = line.split(" ")
+			if words[0] == "maior":
+				print words
+				continue
 			if words[1][:-1] != words[4][:-2]:
 				print "erro! ", words[1][:-1], "!= ", words[4][:-2]
 				return
