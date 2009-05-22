@@ -39,6 +39,17 @@ sem_t carro_esvaziou;
 pthread_mutex_t trava_passageiros_embarque;
 pthread_mutex_t trava_passageiros_desembarque;
 
+/*Semaforo que indica que alguem esta imprimindo a animacao*/
+sem_t imprime_animacao;
+
+/*Vetor que contem os estados de cada passageiro*/
+typedef enum {AUSENTE, FILA, EMBARCANDO, DESEMBARCANDO, SAIDA} estado_p;
+estado_p estado_passageiros[N_PASSAGEIROS];
+
+/*Vetor que contem os estados de cada carro*/ 
+typedef enum { PASSEANDO, CARREGANDO, SAINDO, DESCARREGANDO, ESPERANDO } estado_c;
+estado_c estado_carros[N_PASSAGEIROS];
+
 /*----------------------------------------*/
 
 
@@ -150,7 +161,7 @@ void* Passageiro(void *v) {
 
 
 /* Função para realizar a animacao */
-void* Animacao(void *v) {
+void* Animacao() {
   
   return NULL;
 }
@@ -170,6 +181,7 @@ int main() {
   sem_init(&fila_desembarque,0,0);
   sem_init(&carro_encheu,0,0);
   sem_init(&carro_esvaziou,0,0);
+  sem_init(&imprime_animacao,0,1);
 
   /*Inicializa os vetores de semaforos*/
   sem_init(&plataforma_embarque[0],0,1);
@@ -198,12 +210,8 @@ int main() {
     if(pthread_join(passageiro[i], NULL))
       printf("Erro ao esperar o passageiro!\n"); 
 
-  /*Espera os carros terminarem*/
-  /*for (i = 0; i < N_CARROS; i++) 
-    pthread_join(carro[i], NULL);  Pensando melhor, não espera, mata eles*/ 
-
-  /*Espera a animacao terminar*/
-  /*pthread_join(animacao, NULL);  Pensando melhor, não espera, mata ela*/
+  /*Mata as threads de carro*/ 
+  /*Mata a thread de animacao*/
 
   return 0;
 }
