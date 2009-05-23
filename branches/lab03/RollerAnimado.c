@@ -27,8 +27,13 @@ sem_t plataforma_desembarque[N_CARROS];
 sem_t fila_embarque;
 sem_t fila_desembarque;
 
+/*Semaforos que controlam a chegada na plataforma*/
+sem_t chegou_plataforma;
+sem_t prepararam_desembarque;
+
 /*Guardam quantos passageiros (des)embarcaram no carro*/
 volatile int embarcaram;
+volatile int prepara;
 volatile int desembarcaram;
 
 /*Semaforos que indicam se o carro encheu ou esvaziou*/
@@ -37,13 +42,14 @@ sem_t carro_esvaziou;
 
 /*Mutexes que controlam o (des)embarque de um único passageiro por vez*/
 pthread_mutex_t trava_passageiros_embarque;
+pthread_mutex_t trava_preparacao;
 pthread_mutex_t trava_passageiros_desembarque;
 
 /*Semaforo que indica que alguem esta mudando o estado e imprimindo a animacao*/
 sem_t mudando_estado;
 
 /*Vetor que contem os estados de cada passageiro*/
-typedef enum {AUSENTE, FILA, EMBARCANDO, DESEMBARCANDO, SAIDA} estado_p;
+typedef enum {AUSENTE, FILA, EMBARCANDO, NOCARRO, DESEMBARCANDO, SAIDA} estado_p;
 estado_p estado_passageiros[N_PASSAGEIROS];
 
 /*Vetor que contem os estados de cada carro*/ 
@@ -62,20 +68,29 @@ int proximo(int id) {
 }
 
 /*Carrega o carro com passageiros*/
-void* carregar() {
+void* carregar(int id) {
+  sem_wait(&mudando_estado);
+  estado_carros[id] = CARREGANDO;
+//imprime
+  printf("Carro %d esta carregando.\n",id);
+  sem_post(&mudando_estado);
   sleep(rand() % 3);
   return NULL;
 }
 
 /*Descarrega o carro*/
-void* descarregar() {
+void* descarregar(int id) {
+  sem_wait(&mudando_estado);
+  estado_carros[id] = DESCARREGANDO;
+//imprime
+  printf("Carro %d esta descarregando.\n",id);
+  sem_post(&mudando_estado);
   sleep(rand() % 3);
   return NULL;
 }
 
 /*O carro passeia pelos trilhos*/
 void* passeia() {
-
   /*O tempo do passeio varia entre 3 e 5 segundos*/
   sleep((rand() % 3) + 3);
   return NULL;
@@ -86,25 +101,45 @@ void* Carro(void *v) {
 
   int k;
   int id = (int) v;
+
   while(1){
-    //printf("Carro %d esta pronto para sair.\n",id);
+
     sem_wait(&plataforma_embarque[id]);
-    carregar();
-    //printf("Carro %d esta carregando.\n",id);
+    carregar(id);
     for(k=0;k < LIMITE_CARRO; k++)
       sem_post(&fila_embarque);
     sem_wait(&carro_encheu);
-    //printf("Carro %d terminou de carregar.\n",id);
+
+    sem_wait(&mudando_estado);
+    estado_carros[id] = SAINDO;
+//imprime
+    printf("Carro %d esta saindo.\n",id);
+    estado_carros[id] = PASSEANDO;
+//imprime
+    printf("Carro %d esta passeando.\n",id);
+    sem_post(&mudando_estado);
+
     sem_post(&plataforma_embarque[proximo(id)]);
     passeia();
-    //printf("Carro %d esta passeando.\n",id);
+
     sem_wait(&plataforma_desembarque[id]);
-    descarregar();
-    //printf("Carro %d voltou para a plataforma.\n",id);
+
+    for(k=0;k < LIMITE_CARRO; k++)
+      sem_post(&chegou_plataforma);
+    sem_wait(&prepararam_desembarque);
+
+    descarregar(id);
+
     for(k=0;k < LIMITE_CARRO; k++)
       sem_post(&fila_desembarque);
     sem_wait(&carro_esvaziou);
-    //printf("Carro %d esvaziou.\n",id);
+
+    sem_wait(&mudando_estado);
+    estado_carros[id] = ESPERANDO;
+//imprime
+    printf("Carro %d esta esperando.\n",id);
+    sem_post(&mudando_estado);
+
     sem_post(&plataforma_desembarque[proximo(id)]);
   }
   
@@ -118,13 +153,23 @@ void* Carro(void *v) {
 /* ----Funcoes que serao utilizadas pelos passageiros---- */
 
 /*Embarca o passageiro*/
-void* embarcar() {
+void* embarcar(int id) {
+  sem_wait(&mudando_estado);
+  estado_passageiros[id] = EMBARCANDO;
+//imprime
+  printf("Passageiro %d embarcou.\n",id);
+  sem_post(&mudando_estado);
   sleep(rand() % 3);
   return NULL;
 }
 
 /*Desembarca o passageiro*/
-void* desembarcar() {
+void* desembarcar(int id) {
+  sem_wait(&mudando_estado);
+  estado_passageiros[id] = SAIDA;
+//imprime
+  printf("Passageiro %d desembarcou.\n",id);
+  sem_post(&mudando_estado);
   sleep(rand() % 3);
   return NULL;
 }
@@ -133,10 +178,15 @@ void* desembarcar() {
 void* Passageiro(void *v) {
   int id = (int) v;
   sleep(rand() % N_PASSAGEIROS);
-  //printf("Passageiro %d chegou.\n",id);
+
+  sem_wait(&mudando_estado);
+  estado_passageiros[id] = FILA;
+//imprime
+  printf("Passageiro %d esta na fila.\n",id);
+  sem_post(&mudando_estado);
+
   sem_wait(&fila_embarque);
-  embarcar();
-  //printf("Passageiro %d embarcou.\n",id);
+  embarcar(id);
   pthread_mutex_lock(&trava_passageiros_embarque);
     embarcaram += 1;
     if (embarcaram == LIMITE_CARRO){
@@ -145,9 +195,24 @@ void* Passageiro(void *v) {
     }
   pthread_mutex_unlock(&trava_passageiros_embarque);
 
+  sem_wait(&mudando_estado);
+  estado_passageiros[id] = NOCARRO;
+  sem_post(&mudando_estado);
+
+  sem_wait(&chegou_plataforma);
+  pthread_mutex_lock(&trava_preparacao);
+    sem_wait(&mudando_estado);
+    estado_passageiros[id] = DESEMBARCANDO;
+    sem_post(&mudando_estado);
+    prepara += 1;
+    if (prepara == LIMITE_CARRO){
+      sem_post(&prepararam_desembarque);
+      prepara = 0;
+    }
+  pthread_mutex_unlock(&trava_preparacao);
+
   sem_wait(&fila_desembarque);
-  desembarcar();
-  //printf("Passageiro %d desembarcou.\n",id);
+  desembarcar(id);
   pthread_mutex_lock(&trava_passageiros_desembarque);
     desembarcaram += 1;
     if (desembarcaram == LIMITE_CARRO){
@@ -155,7 +220,10 @@ void* Passageiro(void *v) {
       desembarcaram = 0;
     }
   pthread_mutex_unlock(&trava_passageiros_desembarque);
-  //printf("Passageiro %d foi embora.\n",id);
+
+  sem_wait(&mudando_estado);
+  estado_passageiros[id] = AUSENTE;
+  sem_post(&mudando_estado);
   return NULL;
 }
 
@@ -175,16 +243,17 @@ int main() {
   /*Vetores de threads de passageiros e carros*/
   pthread_t passageiro[N_PASSAGEIROS];
   pthread_t carro[N_PASSAGEIROS]; 
-  pthread_t animacao;
 
   int i;
   
   /*Inicializa os semaforos comuns*/
   sem_init(&fila_embarque,0,0);
   sem_init(&fila_desembarque,0,0);
+  sem_init(&prepararam_desembarque,0,0);
+  sem_init(&chegou_plataforma,0,0);
   sem_init(&carro_encheu,0,0);
   sem_init(&carro_esvaziou,0,0);
-  sem_init(&imprime_animacao,0,1);
+  sem_init(&mudando_estado,0,1);
 
   /*Inicializa os vetores de semaforos*/
   sem_init(&plataforma_embarque[0],0,1);
@@ -198,15 +267,13 @@ int main() {
   for(i=0;i < N_PASSAGEIROS;i++)
     estado_passageiros[i] = AUSENTE;
 
-  /*O primeiro carro comeca no estado carregando*/
-  estado_carros[0] = CARREGANDO;
-  /*Os outros carros comecam no estado esperando*/
-  for(i=1;i < N_CARROS;i++)
+  /*Todos os carros comecam no estado esperando*/
+  for(i=0;i < N_CARROS;i++)
     estado_carros[i] = ESPERANDO;
 
-  /*Cria a animacao*/
-  if(pthread_create(&animacao, NULL, Animacao, NULL))
-    printf("Erro ao criar a animacao!\n");
+  /*Imprime a situacao inicial da animacao*/
+  Animacao();
+  printf("Imprimiu situacao inicial\n");
 
   /*Cria os carros*/
   for (i = 0; i < N_CARROS; i++) 
@@ -224,7 +291,6 @@ int main() {
       printf("Erro ao esperar o passageiro!\n"); 
 
   /*Mata as threads de carro*/ 
-  /*Mata a thread de animacao*/
 
   return 0;
 }
