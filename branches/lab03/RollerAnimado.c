@@ -147,8 +147,15 @@ void* Animacao() {
   else
     printf("         ");
 
-  if(existe_carregando)
-    printf("|?????| ");
+  if(existe_carregando){
+    printf("|");
+    for(i=0;i < N_CARROS;i++)
+    if(i < quant_embarcando)
+       printf("o");
+    else
+       printf("_");
+    printf("| ");
+  }
   else
     printf("        ");
 
@@ -158,20 +165,27 @@ void* Animacao() {
     else
        printf("        ");
 
-  if(existe_descarregando)
-    printf("|?????| ");
+  if(existe_descarregando){
+    printf("|");
+    for(i=0;i < N_CARROS;i++)
+    if(i < quant_desembarcando)
+       printf("o");
+    else
+       printf("_");
+    printf("| ");
+  }
   else
     printf("        ");
 
-  printf("  |\n");
+  printf("  |");
   /**************************/
 
   /****** Sexta  Linha ******/
   printf("|---");
   if(existe_saindo)
-    printf("-o---o---");
+    printf("o---o---");
   else
-    printf("---------");
+    printf("--------");
 
   if(existe_carregando)
     printf("=o===o==");
@@ -192,6 +206,25 @@ void* Animacao() {
   printf("---|\n");
   /**************************/
 
+  /****** Setima Linha ******/
+  printf("|                                                      |saida|   |    |\n");
+  /**************************/
+
+  /****** Oitava Linha ******/
+  printf("|                                                      |____");
+  for(i=0;i < N_CARROS;i++)
+  if(i < quant_saida)
+     printf("o");
+  else
+     printf("_");
+
+  printf("|    |\n");
+  /**************************/
+
+  /******* Nona Linha *******/
+  printf("\\                                                                     /\n");
+  /**************************/
+
   printf("\n");
   return NULL;
 }
@@ -210,7 +243,7 @@ void* carregar(int id) {
   sem_wait(&mudando_estado);
   estado_carros[id] = CARREGANDO;
   Animacao();
-  printf("Carro %d esta carregando.\n",id);
+  printf("Carro %d esta carregando.\n\n",id);
   sem_post(&mudando_estado);
   sleep(rand() % 3);
   return NULL;
@@ -221,7 +254,7 @@ void* descarregar(int id) {
   sem_wait(&mudando_estado);
   estado_carros[id] = DESCARREGANDO;
   Animacao();
-  printf("Carro %d esta descarregando.\n",id);
+  printf("Carro %d esta descarregando.\n\n",id);
   sem_post(&mudando_estado);
   sleep(rand() % 3);
   return NULL;
@@ -256,10 +289,10 @@ void* Carro(void *v) {
     sem_wait(&mudando_estado);
     estado_carros[id] = SAINDO;
     Animacao();
-    printf("Carro %d esta saindo.\n",id);
+    printf("Carro %d esta saindo.\n\n",id);
     estado_carros[id] = PASSEANDO;
     Animacao();
-    printf("Carro %d esta passeando.\n",id);
+    printf("Carro %d esta passeando.\n\n",id);
     sem_post(&mudando_estado);
 
     /*Permite que outro carro carregue e passeia*/
@@ -286,7 +319,7 @@ void* Carro(void *v) {
     sem_wait(&mudando_estado);
     estado_carros[id] = ESPERANDO;
     Animacao();
-    printf("Carro %d esta esperando.\n",id);
+    printf("Carro %d esta esperando.\n\n",id);
     sem_post(&mudando_estado);
 
     /*Libera a plataforma de desembarque para outro carro*/
@@ -307,7 +340,7 @@ void* embarcar(int id) {
   sem_wait(&mudando_estado);
   estado_passageiros[id] = EMBARCANDO;
   Animacao();
-  printf("Passageiro %d embarcou.\n",id);
+  printf("Passageiro %d embarcou.\n\n",id);
   sem_post(&mudando_estado);
   sleep(rand() % 3);
   return NULL;
@@ -318,7 +351,7 @@ void* desembarcar(int id) {
   sem_wait(&mudando_estado);
   estado_passageiros[id] = SAIDA;
   Animacao();
-  printf("Passageiro %d desembarcou.\n",id);
+  printf("Passageiro %d desembarcou.\n\n",id);
   sem_post(&mudando_estado);
   sleep(rand() % 3);
   return NULL;
@@ -335,7 +368,7 @@ void* Passageiro(void *v) {
   sem_wait(&mudando_estado);
   estado_passageiros[id] = FILA;
   Animacao();
-  printf("Passageiro %d esta na fila.\n",id);
+  printf("Passageiro %d esta na fila.\n\n",id);
   sem_post(&mudando_estado);
 
   /*O passageiro espera a entrada no carro*/
