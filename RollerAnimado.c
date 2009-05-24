@@ -61,7 +61,112 @@ estado_c estado_carros[N_CARROS];
 
 /* ----Função para realizar a animacao----*/
 void* Animacao() {
+  /*Variaveis que contam quantos passageiros estao num certo estado*/
+  int quant_fila=0, quant_embarcando=0, quant_desembarcando=0, quant_saida=0;
+
+  /*Variavel que conta quantos carros estão esperando na plataforma*/
+  int quant_esperando=0, existe_carregando=0, existe_saindo=0, existe_descarregando=0;
   
+  /* Contador/indexador */
+  int i;
+
+  /*Conta quantos estao na fila*/
+  for(i=0;i < N_PASSAGEIROS;i++){
+    if(estado_passageiros[i] == FILA)
+      quant_fila++;
+  }
+
+  /*Conta quantos estao embarcando*/
+  for(i=0;i < N_PASSAGEIROS;i++){
+    if(estado_passageiros[i] == EMBARCANDO)
+      quant_embarcando++;
+  }
+
+  /*Conta quantos estao na desembarcando*/
+  for(i=0;i < N_PASSAGEIROS;i++){
+    if(estado_passageiros[i] == DESEMBARCANDO)
+      quant_desembarcando++;
+  }
+
+  /*Conta quantos estao na saida*/
+  for(i=0;i < N_PASSAGEIROS;i++){
+    if(estado_passageiros[i] == SAIDA)
+      quant_saida++;
+  }
+
+  /*Conta quantos carros estao esperando*/
+  for(i=0;i < N_CARROS;i++){
+    if(estado_carros[i] == ESPERANDO)
+      quant_esperando++;
+  }
+
+  /*Checa se existe um carro carregando*/
+  for(i=0;i < N_CARROS;i++){
+    if(estado_carros[i] == CARREGANDO)
+      existe_carregando = 1;
+  }
+
+  /*Checa se existe um carro saindo*/
+  for(i=0;i < N_CARROS;i++){
+    if(estado_carros[i] == SAINDO)
+      existe_saindo = 1;
+  }
+
+  /*Checa se existe um carro descarregando*/
+  for(i=0;i < N_CARROS;i++){
+    if(estado_carros[i] == DESCARREGANDO)
+      existe_descarregando = 1;
+  }
+
+  /***** Primeira Linha *****/
+  printf("/                            Montanha Russa                           \\\n");
+  /**************************/
+
+  /***** Segunda  Linha *****/
+  printf("|            |entrada|                                                |\n");
+  /**************************/
+
+  /***** Terceira Linha *****/
+  printf("|            |   #");
+  for(i=0;i < N_PASSAGEIROS;i++)
+    if(i < quant_fila)
+       printf("o");
+    else
+       printf("_");
+  printf("  |\n");
+  /**************************/
+
+  /****** Quarta Linha ******/
+  printf("|            |   |\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/  |\n");
+  /**************************/
+
+  /****** Quinta Linha ******/
+  printf("|  ");
+  if(existe_saindo)
+    printf("|ooooo|  ");
+  else
+    printf("         ");
+
+  if(existe_carregando)
+    printf("|?????| ");
+  else
+    printf("        ");
+
+  for(i=0;i < N_CARROS;i++)
+    if(i < quant_esperando)
+       printf("|_____| ");
+    else
+       printf("        ");
+
+  if(existe_descarregando)
+    printf("|?????| ");
+  else
+    printf("        ");
+
+  printf("  |\n");
+  /**************************/
+
+  printf("\n");
   return NULL;
 }
 /*----------------------------------------*/

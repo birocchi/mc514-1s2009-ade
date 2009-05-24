@@ -1,12 +1,9 @@
-        /                              Montanha Russa                                   \
-        |                                                |entrada|                      |
-        |                FILA                            |       |                      |
-        |__________________ooooooooooooooooooooooooooooooooo#_   |                      |
-        |/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\| o | EMBARCANDO           |
-        |DESEMBARC  |___oo| DESCARREGANDO   |_____| |_____| |___oo|      |ooooo|        | PASSEANDO
-AUSENTE |-----------=o=1=o===================o=5=o===o=4=o===o=3=o=-------o-2-o---------|
-        | |saida|    |   |                   ESPERANDO      CARREGANDO     SAINDO       |
-        |_|_____|_____ooo| SAIDA                                                        |
-        |                                                                               |
-        \                                                                               /
-
+        /                            Montanha Russa                           \
+        |            |entrada|                                                |
+        |            |   #oooooooooooooooooooo______________________________  |
+        |            |   |\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/  |
+        |  |ooooo|  |_____| |_____| |_____| |_____| |_____| |_____| |___oo|   |          
+        |---o---o---=o===o===o===o===o===o===========================o   o=---|
+        |                                                      |saida|   |    |
+        |                                                      |____ooo__|    |
+        \                                                                     /
