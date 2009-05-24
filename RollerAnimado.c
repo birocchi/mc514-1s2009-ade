@@ -166,6 +166,32 @@ void* Animacao() {
   printf("  |\n");
   /**************************/
 
+  /****** Sexta  Linha ******/
+  printf("|---");
+  if(existe_saindo)
+    printf("-o---o---");
+  else
+    printf("---------");
+
+  if(existe_carregando)
+    printf("=o===o==");
+  else
+    printf("========");
+
+  for(i=0;i < N_CARROS;i++)
+    if(i < quant_esperando)
+       printf("=o===o==");
+    else
+       printf("========");
+
+  if(existe_descarregando)
+    printf("=o   o=");
+  else
+    printf("=======");
+
+  printf("---|\n");
+  /**************************/
+
   printf("\n");
   return NULL;
 }
