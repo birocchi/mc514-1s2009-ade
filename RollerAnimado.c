@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <sys/time.h>
 #include <sys/types.h>
@@ -35,6 +36,9 @@ sem_t prepararam_desembarque;
 sem_t foi_passear;
 sem_t prepararam_passeio;
 
+/*Matriz com a imagem que eh impressa*/
+char imagem[9][75];
+
 /*Guardam quantos passageiros (des)embarcaram no carro*/
 volatile int embarcaram;
 volatile int prepara1,prepara2;
@@ -63,6 +67,34 @@ estado_c estado_carros[N_CARROS];
 
 /*----------------------------------------*/
 
+/*Configura a matriz imagem com o estado inicial*/
+void InicializaImagem(void){
+  char imagem0[75] = "/                            Montanha Russa                           \\\n";
+  char imagem1[75] = "|            |entrada|                                                |\n";
+  char imagem2[75] = "|            |   #__________________________________________________  |\n";
+  char imagem3[75] = "|            |   |\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/  |\n";
+  char imagem4[75] = "|           |_____| |_____| |_____| |_____| |_____| |_____| |_____|   |\n";
+  char imagem5[75] = "|           =o===o===o===o===o===o===o===o===o===o===o===o===o===o=---|\n";
+  char imagem6[75] = "|                                                      |saida|   |    |\n";
+  char imagem7[75] = "|                                                      |_________|    |\n";
+  char imagem8[75] = "\\                                                                     /\n";
+
+  strcpy(imagem[0], imagem0);
+  strcpy(imagem[1], imagem1);
+  strcpy(imagem[2], imagem2);
+  strcpy(imagem[3], imagem3);
+  strcpy(imagem[4], imagem4);
+  strcpy(imagem[5], imagem5);
+  strcpy(imagem[6], imagem6);
+  strcpy(imagem[7], imagem7);
+  strcpy(imagem[8], imagem8);
+}
+
+void ImprimeImagem(void){
+  int i;
+  for(i=0; i<9; i++)
+    printf("%s",imagem[i]);
+}
 
 /* ----Função para realizar a animacao----*/
 void* Animacao() {
@@ -73,7 +105,7 @@ void* Animacao() {
   int quant_esperando=0, existe_carregando=0, existe_saindo=0, existe_descarregando=0;
   
   /* Contador/indexador */
-  int i;
+  int i, j;
 
   /*Conta quantos estao na fila*/
   for(i=0;i < N_PASSAGEIROS;i++){
@@ -124,114 +156,118 @@ void* Animacao() {
   }
 
   /***** Primeira Linha *****/
-  printf("/                            Montanha Russa                           \\\n");
   /**************************/
 
   /***** Segunda  Linha *****/
-  printf("|            |entrada|                                                |\n");
   /**************************/
 
   /***** Terceira Linha *****/
-  printf("|            |   #");
   for(i=0;i < N_PASSAGEIROS;i++)
     if(i < quant_fila)
-       printf("o");
+       imagem[2][17+i] = 'o';
     else
-       printf("_");
-  printf("  |\n");
+       imagem[2][17+i] = '_';
   /**************************/
 
   /****** Quarta Linha ******/
-  printf("|            |   |\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/  |\n");
   /**************************/
 
-  /****** Quinta Linha ******/
-  printf("|  ");
-  if(existe_saindo)
-    printf("|ooooo|  ");
-  else
-    printf("         ");
+  /****** Quinta e Sexta Linhaa ******/
+  /*carro saindo*/
+  if(existe_saindo){
+    imagem[4][3] = '|';
+    imagem[5][4] = 'o';
+    for(i=0;i<5;i++)
+      imagem[4][4+i] = 'o';
+    imagem[4][9] = '|';
+    imagem[5][8] = 'o';
+  }
+  else{
+    for(i=0;i<7;i++)
+      imagem[4][3+i] = ' ';
+    imagem[5][4] = '-';
+    imagem[5][8] = '-';
+  }
 
+  /*carro sendo carregado*/
   if(existe_carregando){
-    printf("|");
-    for(i=0;i < N_CARROS;i++)
-    if(i < quant_embarcando)
-       printf("o");
-    else
-       printf("_");
-    printf("| ");
+    imagem[4][12] = '|';
+    imagem[5][13] = 'o';
+    for(i=0;i < LIMITE_CARRO;i++){
+      if(i < quant_embarcando)
+        imagem[4][13+i] = 'o';
+      else
+        imagem[4][13+i] = '_';
+    }
+    imagem[4][18] = '|';
+    imagem[5][17] = 'o';
   }
-  else
-    printf("        ");
-
+  else{
+    for(i=0;i<7;i++)
+      imagem[4][12+i] = ' ';
+    imagem[5][13] = '=';
+    imagem[5][17] = '=';
+  }
+      
+  /*outros carros*/
   for(i=0;i < N_CARROS;i++)
-    if(i < quant_esperando)
-       printf("|_____| ");
-    else
-       printf("        ");
+    if(i < quant_esperando){
+       imagem[4][20+(i*8)] = '|';
+       imagem[5][21+(i*8)] = 'o';
+       for(j=0;j<LIMITE_CARRO;j++)
+         imagem[4][(21+i*8)+j] = '_';
+       imagem[4][26+(i*8)] = '|';
+       imagem[5][25+(i*8)] = '0';
+       imagem[4][27+(i*8)] = ' ';
+    }
+    else{
+       for(j=0;j<LIMITE_CARRO+3;j++)
+         imagem[4][(20+i*8)+j] = ' ';
+       imagem[5][21+(i*8)] = '=';
+       imagem[5][25+(i*8)] = '=';
+    }
 
+  /*carro descarregando*/
   if(existe_descarregando){
-    printf("|");
-    for(i=0;i < N_CARROS;i++)
-    if(i < quant_desembarcando)
-       printf("o");
-    else
-       printf("_");
-    printf("| ");
+    imagem[4][53] = '|';
+    for(i=0;i < LIMITE_CARRO;i++){
+      imagem[5][54+i] = ' ';  
+      if(i < quant_desembarcando)
+       imagem[4][54+i] ='o';
+      else
+       imagem[4][54+i] ='_';
+    }
+    imagem[4][59] = '|';
+    imagem[5][54] = 'o';
+    imagem[5][58] = 'o';
   }
-  else
-    printf("        ");
+  else{
+    for(i=0;i<LIMITE_CARRO+2;i++)
+      imagem[4][53+i] = ' ';
+      imagem[5][53+i] = '=';
+  }
 
-  printf("  |\n");
-  /**************************/
-
-  /****** Sexta  Linha ******/
-  printf("|---");
-  if(existe_saindo)
-    printf("o---o---");
-  else
-    printf("--------");
-
-  if(existe_carregando)
-    printf("=o===o==");
-  else
-    printf("========");
-
-  for(i=0;i < N_CARROS;i++)
-    if(i < quant_esperando)
-       printf("=o===o==");
-    else
-       printf("========");
-
-  if(existe_descarregando)
-    printf("=o   o=");
-  else
-    printf("=======");
-
-  printf("---|\n");
   /**************************/
 
   /****** Setima Linha ******/
-  printf("|                                                      |saida|   |    |\n");
   /**************************/
 
   /****** Oitava Linha ******/
-  printf("|                                                      |____");
-  for(i=0;i < N_CARROS;i++)
-  if(i < quant_saida)
-     printf("o");
-  else
-     printf("_");
-
-  printf("|    |\n");
-  /**************************/
+  for(i=0;i < N_CARROS;i++){
+    if(i < quant_saida)
+        imagem[7][60+i] = 'o';
+    else
+        imagem[7][60+i] = '_';
+  }
 
   /******* Nona Linha *******/
-  printf("\\                                                                     /\n");
   /**************************/
+
+  ImprimeImagem();
 
   return NULL;
 }
+
 /*----------------------------------------*/
 
 
@@ -460,6 +496,7 @@ int main() {
   sem_init(&carro_esvaziou,0,0);
   sem_init(&mudando_estado,0,1);
 
+
   /*Inicializa os vetores de semaforos*/
   sem_init(&plataforma_embarque[0],0,1);
   for(i=1;i < N_CARROS; i++)
@@ -477,6 +514,8 @@ int main() {
     estado_carros[i] = ESPERANDO;
 
   /*Imprime a situacao inicial da animacao*/
+  InicializaImagem();
+  ImprimeImagem(); //PARA COMPARACAO APENAS!
   Animacao();
   printf("Imprimiu situacao inicial\n\n\n");
 
