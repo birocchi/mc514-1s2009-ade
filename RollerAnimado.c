@@ -37,7 +37,7 @@ sem_t foi_passear;
 sem_t prepararam_passeio;
 
 /*Matriz com a imagem que eh impressa*/
-char imagem[9][75];
+char imagem[9][100];
 
 /*Guardam quantos passageiros (des)embarcaram no carro*/
 volatile int embarcaram;
@@ -69,15 +69,15 @@ estado_c estado_carros[N_CARROS];
 
 /*Configura a matriz imagem com o estado inicial*/
 void InicializaImagem(void){
-  char imagem0[75] = "/                            Montanha Russa                           \\\n";
-  char imagem1[75] = "|            |entrada|                                                |\n";
-  char imagem2[75] = "|            |   #__________________________________________________  |\n";
-  char imagem3[75] = "|            |   |\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/  |\n";
-  char imagem4[75] = "|           |_____| |_____| |_____| |_____| |_____| |_____| |_____|   |\n";
-  char imagem5[75] = "|           =o===o===o===o===o===o===o===o===o===o===o===o===o===o=---|\n";
-  char imagem6[75] = "|                                                      |saida|   |    |\n";
-  char imagem7[75] = "|                                                      |_________|    |\n";
-  char imagem8[75] = "\\                                                                     /\n";
+  char imagem0[100] = "/                            Montanha Russa                           \\\n";
+  char imagem1[100] = "|            |entrada|                                                |\n";
+  char imagem2[100] = "|            |   #__________________________________________________  |\n";
+  char imagem3[100] = "|            |   |\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/  |\n";
+  char imagem4[100] = "|           |_____| |_____| |_____| |_____| |_____| |_____| |_____|   |\n";
+  char imagem5[100] = "|           =o===o===o===o===o===o===o===o===o===o===o===o===o===o=---|\n";
+  char imagem6[100] = "|                                                      |saida|   |    |\n";
+  char imagem7[100] = "|                                                      |_________|    |\n";
+  char imagem8[100] = "\\                                                                     /\n";
 
   strcpy(imagem[0], imagem0);
   strcpy(imagem[1], imagem1);
@@ -106,6 +106,8 @@ void* Animacao() {
   
   /* Contador/indexador */
   int i, j;
+  /* Posicao da string a partir da qual deverão ser feitas modificações*/
+  int offset;
 
   /*Conta quantos estao na fila*/
   for(i=0;i < N_PASSAGEIROS;i++){
@@ -162,11 +164,12 @@ void* Animacao() {
   /**************************/
 
   /***** Terceira Linha *****/
+  offset = 17;
   for(i=0;i < N_PASSAGEIROS;i++)
     if(i < quant_fila)
-       imagem[2][17+i] = 'o';
+       imagem[2][offset+i] = 'o';
     else
-       imagem[2][17+i] = '_';
+       imagem[2][offset+i] = '_';
   /**************************/
 
   /****** Quarta Linha ******/
@@ -174,77 +177,82 @@ void* Animacao() {
 
   /****** Quinta e Sexta Linhaa ******/
   /*carro saindo*/
+  offset = 3;
   if(existe_saindo){
-    imagem[4][3] = '|';
-    imagem[5][4] = 'o';
+    imagem[4][offset] = '|';
+    imagem[5][offset+1] = 'o';
     for(i=0;i<5;i++)
-      imagem[4][4+i] = 'o';
-    imagem[4][9] = '|';
-    imagem[5][8] = 'o';
+      imagem[4][offset+1+i] = 'o';
+    imagem[4][offset+6] = '|';
+    imagem[5][offset+5] = 'o';
   }
   else{
     for(i=0;i<7;i++)
-      imagem[4][3+i] = ' ';
-    imagem[5][4] = ' ';
-    imagem[5][8] = ' ';
+      imagem[4][offset+i] = ' ';
+    imagem[5][offset+1] = ' ';
+    imagem[5][offset+5] = ' ';
   }
 
   /*carro sendo carregado*/
+  offset += 9; //12
   if(existe_carregando){
-    imagem[4][12] = '|';
-    imagem[5][13] = 'o';
+    imagem[4][offset] = '|';
+    imagem[5][offset+1] = 'o';
     for(i=0;i < LIMITE_CARRO;i++){
       if(i < quant_embarcando)
-        imagem[4][13+i] = 'o';
+        imagem[4][(offset+1)+i] = 'o';
       else
-        imagem[4][13+i] = '_';
+        imagem[4][(offset+1)+i] = '_';
     }
-    imagem[4][18] = '|';
-    imagem[5][17] = 'o';
+    imagem[4][offset+6] = '|';
+    imagem[5][offset+5] = 'o';
   }
   else{
     for(i=0;i<7;i++)
-      imagem[4][12+i] = ' ';
-    imagem[5][13] = '=';
-    imagem[5][17] = '=';
+      imagem[4][offset+i] = ' ';
+    imagem[5][offset+1] = '=';
+    imagem[5][offset+5] = '=';
   }
       
   /*outros carros*/
+  offset += 8;//20
   for(i=0;i < N_CARROS;i++)
     if(i < quant_esperando){
-       imagem[4][20+(i*8)] = '|';
-       imagem[5][21+(i*8)] = 'o';
+       imagem[4][offset+(i*8)] = '|';
+       imagem[5][(offset+1)+(i*8)] = 'o';
        for(j=0;j<LIMITE_CARRO;j++)
-         imagem[4][(21+i*8)+j] = '_';
-       imagem[4][26+(i*8)] = '|';
-       imagem[5][25+(i*8)] = '0';
-       imagem[4][27+(i*8)] = ' ';
+         imagem[4][(offset+1)+(i*8)+j] = '_';
+       imagem[4][(offset+6)+(i*8)] = '|';
+       imagem[5][(offset+5)+(i*8)] = '0';
+       imagem[4][(offset+7)+(i*8)] = ' ';
     }
     else{
        for(j=0;j<LIMITE_CARRO+3;j++)
-         imagem[4][(20+i*8)+j] = ' ';
-       imagem[5][21+(i*8)] = '=';
-       imagem[5][25+(i*8)] = '=';
+         imagem[4][offset+(i*8)+j] = ' ';
+       imagem[5][(offset+1)+(i*8)] = '=';
+       imagem[5][(offset+5)+(i*8)] = '=';
     }
 
   /*carro descarregando*/
+  offset += 8*N_CARROS;
   if(existe_descarregando){
-    imagem[4][60] = '|';
+    imagem[4][offset] = '|';
     for(i=0;i < LIMITE_CARRO;i++){
-      imagem[5][61+i] = ' ';  
+      imagem[5][(offset+1)+i] = ' ';  
       if(i < quant_desembarcando)
-       imagem[4][61+i] ='o';
+       imagem[4][(offset+1)+i] ='o';
       else
-       imagem[4][61+i] ='_';
+       imagem[4][(offset+1)+i] ='_';
     }
-    imagem[4][66] = '|';
-    imagem[5][61] = 'o';
-    imagem[5][65] = 'o';
+    imagem[4][offset+6] = '|';
+    imagem[5][offset+1] = 'o';
+    imagem[5][offset+5] = 'o';
   }
   else{
-    for(i=0;i<LIMITE_CARRO+2;i++)
-      imagem[4][60+i] = ' ';
-      imagem[5][60+i] = '=';
+    for(i=0;i<LIMITE_CARRO+2;i++){
+      imagem[4][offset+i] = ' ';
+      imagem[5][offset+i] = '=';
+	}
   }
 
   /**************************/
@@ -255,9 +263,9 @@ void* Animacao() {
   /****** Oitava Linha ******/
   for(i=0;i < N_CARROS;i++){
     if(i < quant_saida)
-        imagem[7][60+i] = 'o';
+        imagem[7][offset+i] = 'o'; /*mantem usando o mesmo offset da linha anterior*/
     else
-        imagem[7][60+i] = '_';
+        imagem[7][offset+i] = '_';
   }
 
   /******* Nona Linha *******/
