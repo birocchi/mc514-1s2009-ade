@@ -185,8 +185,8 @@ void* Animacao() {
   else{
     for(i=0;i<7;i++)
       imagem[4][3+i] = ' ';
-    imagem[5][4] = '-';
-    imagem[5][8] = '-';
+    imagem[5][4] = ' ';
+    imagem[5][8] = ' ';
   }
 
   /*carro sendo carregado*/
@@ -229,22 +229,22 @@ void* Animacao() {
 
   /*carro descarregando*/
   if(existe_descarregando){
-    imagem[4][53] = '|';
+    imagem[4][60] = '|';
     for(i=0;i < LIMITE_CARRO;i++){
-      imagem[5][54+i] = ' ';  
+      imagem[5][61+i] = ' ';  
       if(i < quant_desembarcando)
-       imagem[4][54+i] ='o';
+       imagem[4][61+i] ='o';
       else
-       imagem[4][54+i] ='_';
+       imagem[4][61+i] ='_';
     }
-    imagem[4][59] = '|';
-    imagem[5][54] = 'o';
-    imagem[5][58] = 'o';
+    imagem[4][66] = '|';
+    imagem[5][61] = 'o';
+    imagem[5][65] = 'o';
   }
   else{
     for(i=0;i<LIMITE_CARRO+2;i++)
-      imagem[4][53+i] = ' ';
-      imagem[5][53+i] = '=';
+      imagem[4][60+i] = ' ';
+      imagem[5][60+i] = '=';
   }
 
   /**************************/
