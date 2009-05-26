@@ -628,7 +628,6 @@ int main() {
 
   /*Imprime a situacao inicial da animacao*/
   InicializaImagem();
-  ImprimeImagem(); //PARA COMPARACAO APENAS!
   Animacao();
   printf("Imprimiu situacao inicial\n\n\n");
 
