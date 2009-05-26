@@ -10,8 +10,8 @@
 #include <limits.h>
 
 /* ----Definicoes----*/
-#define N_CARROS 5
-#define N_PASSAGEIROS 40
+#define N_CARROS 3
+#define N_PASSAGEIROS 6
 #define LIMITE_CARRO 3
 /*-------------------*/
 
@@ -84,18 +84,18 @@ void InicializaImagem(void){
 */
 																																																							  																										  		
   char imagem0[160] = "/  Montanha Russa";
-  char imagem1[160] = "|          |entrada|";
-  char imagem2[160] = "|            |   #";
-  char imagem3[160] = "|            |   |\\/";
+  char imagem1[160] = "|";
+  char imagem2[160] = "|";
+  char imagem3[160] = "|";
   char imagem4[160] = "|";
-  char imagem5[160] = "|-----------";
+  char imagem5[160] = "|---";
   char imagem6[160] = "|";
   char imagem7[160] = "|";
   char imagem8[160] = "\\";
 
   /*N_PASSAGEIROS+20 eh a largura da imagem*/
-  if (N_PASSAGEIROS+20 > 3*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+14)
-	largura = N_PASSAGEIROS+20;
+  if (N_PASSAGEIROS+LIMITE_CARRO+15 > 3*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+14)
+	largura = N_PASSAGEIROS+LIMITE_CARRO+15;
   else
 	largura = 3*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+14;
 
@@ -109,16 +109,23 @@ void InicializaImagem(void){
   for(i=1;i<largura;i++){
     if(i>16)
   	  imagem0[i] = ' ';
-	if(i>19)  
-      imagem1[i] = ' ';
-	if(i>17)
+    imagem1[i] = ' ';
+	if(i>LIMITE_CARRO+12)
       imagem2[i] = '_';
-	if(i>19 && i%2 == 0){
+	else
+	  imagem2[i] = ' ';
+
+	if(i>LIMITE_CARRO+12 && i%2 == 0){
 	  imagem3[i-1] = '\\';
 	  imagem3[i] = '/';
 	}
+	else
+	  imagem3[i] = ' ';
+
     imagem4[i] = ' ';
-	if(i>11)
+	if(i<=LIMITE_CARRO+7)
+	  imagem5[i] = '-';
+	else
 	  imagem5[i] = '=';
     imagem6[i] = ' ';
     imagem7[i] = ' ';
@@ -129,16 +136,29 @@ void InicializaImagem(void){
   imagem0[i+1] = '\n';
   imagem0[i+2] = '\0';
   
+  imagem1[LIMITE_CARRO+6] = '|';
+  imagem1[LIMITE_CARRO+7] = 'e';
+  imagem1[LIMITE_CARRO+8] = 'n';
+  imagem1[LIMITE_CARRO+9] = 't';
+  imagem1[LIMITE_CARRO+10] = 'r';
+  imagem1[LIMITE_CARRO+11] = 'a';
+  imagem1[LIMITE_CARRO+12] = 'd';
+  imagem1[LIMITE_CARRO+13] = 'a';
+  imagem1[LIMITE_CARRO+14] = '|';
   imagem1[i] = '|';
   imagem1[i+1] = '\n';
   imagem1[i+2] = '\0';
   
+  imagem2[LIMITE_CARRO+8] = '|';
+  imagem2[LIMITE_CARRO+12] = '#';
   imagem2[i-2] = ' ';
   imagem2[i-1]   = ' ';
   imagem2[i] = '|';
   imagem2[i+1] = '\n';
   imagem2[i+2] = '\0';
   
+  imagem3[LIMITE_CARRO+8] = '|';
+  imagem3[LIMITE_CARRO+12] = '|';
   imagem3[i-2] = ' ';
   imagem3[i-1]   = ' ';
   imagem3[i] = '|';
@@ -269,7 +289,7 @@ void* Animacao() {
   /**************************/
 
   /***** Terceira Linha *****/
-  offset = 18;
+  offset = LIMITE_CARRO+13;
   for(i=0;i < N_PASSAGEIROS;i++)
     if(i < quant_fila)
        imagem[2][offset+i] = 'o';
@@ -377,7 +397,7 @@ void* Animacao() {
   /**************************/
 
   ImprimeImagem();
-
+  
   return NULL;
 }
 
