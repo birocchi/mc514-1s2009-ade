@@ -10,9 +10,9 @@
 #include <limits.h>
 
 /* ----Definicoes----*/
-#define N_CARROS 7
-#define N_PASSAGEIROS 100
-#define LIMITE_CARRO 8
+#define N_CARROS 5
+#define N_PASSAGEIROS 40
+#define LIMITE_CARRO 3
 /*-------------------*/
 
 
@@ -37,7 +37,7 @@ sem_t foi_passear;
 sem_t prepararam_passeio;
 
 /*Matriz com a imagem que eh impressa*/
-char imagem[9][100+N_PASSAGEIROS+25];
+char imagem[9][160];
 
 /*Guardam quantos passageiros (des)embarcaram no carro*/
 volatile int embarcaram;
@@ -69,7 +69,7 @@ estado_c estado_carros[N_CARROS];
 
 /*Configura a matriz imagem com o estado inicial*/
 void InicializaImagem(void){
-  int i,j;
+  int i,j,largura;
 
 /* IMAGEM:
 /  Montanha Russa                                                     \
@@ -82,20 +82,31 @@ void InicializaImagem(void){
 |                                                      |_________|    |
 \                                                                     /
 */
+																																																							  																										  		
+  char imagem0[160] = "/  Montanha Russa";
+  char imagem1[160] = "|          |entrada|";
+  char imagem2[160] = "|            |   #";
+  char imagem3[160] = "|            |   |\\/";
+  char imagem4[160] = "|";
+  char imagem5[160] = "|-----------";
+  char imagem6[160] = "|";
+  char imagem7[160] = "|";
+  char imagem8[160] = "\\";
 
-  char imagem0[100+N_PASSAGEIROS+25] = "/  Montanha Russa";
-  char imagem1[100+N_PASSAGEIROS+25] = "|          |entrada|";
-  char imagem2[100+N_PASSAGEIROS+25] = "|            |   #";
-  char imagem3[100+N_PASSAGEIROS+25] = "|            |   |\\/";
-  char imagem4[100+N_PASSAGEIROS+25] = "|";
-  char imagem5[100+N_PASSAGEIROS+25] = "|-----------";
-  char imagem6[100+N_PASSAGEIROS+25] = "|";
-  char imagem7[100+N_PASSAGEIROS+25] = "|";
-  char imagem8[100+N_PASSAGEIROS+25] = "\\";
-
-  /*linhas 1,2,5,6 e 9*/
   /*N_PASSAGEIROS+20 eh a largura da imagem*/
-  for(i=1;i<N_PASSAGEIROS+22;i++){
+  if (N_PASSAGEIROS+20 > 3*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+14)
+	largura = N_PASSAGEIROS+20;
+  else
+	largura = 3*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+14;
+
+  if(largura > 150){
+	printf("ERRO! valores muito grandes para serem mostrados na tela! Abortando!\n");
+	exit(1);
+  }
+  if(largura < 25)
+	largura = 40;
+
+  for(i=1;i<largura;i++){
     if(i>16)
   	  imagem0[i] = ' ';
 	if(i>19)  
