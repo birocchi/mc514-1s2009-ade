@@ -10,9 +10,9 @@
 #include <limits.h>
 
 /* ----Definicoes----*/
-#define N_CARROS 3
-#define N_PASSAGEIROS 6
-#define LIMITE_CARRO 3
+#define N_CARROS 5
+#define N_PASSAGEIROS 60
+#define LIMITE_CARRO 5
 /*-------------------*/
 
 
