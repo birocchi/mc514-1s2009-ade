@@ -72,7 +72,7 @@ void InicializaImagem(void){
   int i,j,largura;
 
 /* IMAGEM:
-/  Montanha Russa                                                     \
+/                       Montanha Russa                                \
 |            |entrada|                                                |
 |            |   #__________________________________________________  |
 |            |   |\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/  |
@@ -83,16 +83,6 @@ void InicializaImagem(void){
 \                                                                     /
 */
 																																																							  																										  		
-  char imagem0[160] = "/  Montanha Russa";
-  char imagem1[160] = "|";
-  char imagem2[160] = "|";
-  char imagem3[160] = "|";
-  char imagem4[160] = "|";
-  char imagem5[160] = "|---";
-  char imagem6[160] = "|";
-  char imagem7[160] = "|";
-  char imagem8[160] = "\\";
-
   /*N_PASSAGEIROS+20 eh a largura da imagem*/
   if (N_PASSAGEIROS+LIMITE_CARRO+15 > 3*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+14)
 	largura = N_PASSAGEIROS+LIMITE_CARRO+15;
@@ -107,124 +97,123 @@ void InicializaImagem(void){
 	largura = 40;
 
   for(i=1;i<largura;i++){
-  	imagem0[i] = ' ';
-    imagem1[i] = ' ';
+  	imagem[0][i] = ' ';
+    imagem[1][i] = ' ';
 	if(i>LIMITE_CARRO+12)
-      imagem2[i] = '_';
+      imagem[2][i] = '_';
 	else
-	  imagem2[i] = ' ';
+	  imagem[2][i] = ' ';
 
 	if(i>LIMITE_CARRO+12 && i%2 == 0){
-	  imagem3[i-1] = '\\';
-	  imagem3[i] = '/';
+	  imagem[3][i-1] = '\\';
+	  imagem[3][i] = '/';
 	}
 	else
-	  imagem3[i] = ' ';
+	  imagem[3][i] = ' ';
 
-    imagem4[i] = ' ';
+    imagem[4][i] = ' ';
 	if(i<=LIMITE_CARRO+7)
-	  imagem5[i] = '-';
+	  imagem[5][i] = '-';
 	else
-	  imagem5[i] = '=';
-    imagem6[i] = ' ';
-    imagem7[i] = ' ';
-    imagem8[i] = ' ';
+	  imagem[5][i] = '=';
+    imagem[6][i] = ' ';
+    imagem[7][i] = ' ';
+    imagem[8][i] = ' ';
   }
  
-  imagem0[largura/2-7] = 'M';
-  imagem0[largura/2-6] = 'o';
-  imagem0[largura/2-5] = 'n';
-  imagem0[largura/2-4] = 't';
-  imagem0[largura/2-3] = 'a';
-  imagem0[largura/2-2] = 'n';
-  imagem0[largura/2-1] = 'h';
-  imagem0[largura/2] = 'a';
-  imagem0[largura/2+2] = 'R';
-  imagem0[largura/2+3] = 'u';
-  imagem0[largura/2+4] = 's';
-  imagem0[largura/2+5] = 's';
-  imagem0[largura/2+6] = 'a';
-  imagem0[i] = '\\';
-  imagem0[i+1] = '\n';
-  imagem0[i+2] = '\0';
+  imagem[0][0] = '/';
+  imagem[0][largura/2-7] = 'M';
+  imagem[0][largura/2-6] = 'o';
+  imagem[0][largura/2-5] = 'n';
+  imagem[0][largura/2-4] = 't';
+  imagem[0][largura/2-3] = 'a';
+  imagem[0][largura/2-2] = 'n';
+  imagem[0][largura/2-1] = 'h';
+  imagem[0][largura/2] = 'a';
+  imagem[0][largura/2+2] = 'R';
+  imagem[0][largura/2+3] = 'u';
+  imagem[0][largura/2+4] = 's';
+  imagem[0][largura/2+5] = 's';
+  imagem[0][largura/2+6] = 'a';
+  imagem[0][i] = '\\';
+  imagem[0][i+1] = '\n';
+  imagem[0][i+2] = '\0';
   
-  imagem1[LIMITE_CARRO+8] = '|';
-  imagem1[LIMITE_CARRO+9] = 'e';
-  imagem1[LIMITE_CARRO+10] = 'n';
-  imagem1[LIMITE_CARRO+11] = 't';
-  imagem1[LIMITE_CARRO+12] = 'r';
-  imagem1[LIMITE_CARRO+13] = 'a';
-  imagem1[LIMITE_CARRO+14] = 'd';
-  imagem1[LIMITE_CARRO+15] = 'a';
-  imagem1[LIMITE_CARRO+16] = '|';
-  imagem1[i] = '|';
-  imagem1[i+1] = '\n';
-  imagem1[i+2] = '\0';
+  imagem[1][0] = '|';
+  imagem[1][LIMITE_CARRO+8] = '|';
+  imagem[1][LIMITE_CARRO+9] = 'e';
+  imagem[1][LIMITE_CARRO+10] = 'n';
+  imagem[1][LIMITE_CARRO+11] = 't';
+  imagem[1][LIMITE_CARRO+12] = 'r';
+  imagem[1][LIMITE_CARRO+13] = 'a';
+  imagem[1][LIMITE_CARRO+14] = 'd';
+  imagem[1][LIMITE_CARRO+15] = 'a';
+  imagem[1][LIMITE_CARRO+16] = '|';
+  imagem[1][i] = '|';
+  imagem[1][i+1] = '\n';
+  imagem[1][i+2] = '\0';
   
-  imagem2[LIMITE_CARRO+8] = '|';
-  imagem2[LIMITE_CARRO+12] = '#';
-  imagem2[i-2] = ' ';
-  imagem2[i-1]   = ' ';
-  imagem2[i] = '|';
-  imagem2[i+1] = '\n';
-  imagem2[i+2] = '\0';
+  imagem[2][0] = '|';
+  imagem[2][LIMITE_CARRO+8] = '|';
+  imagem[2][LIMITE_CARRO+12] = '#';
+  imagem[2][i-2] = ' ';
+  imagem[2][i-1]   = ' ';
+  imagem[2][i] = '|';
+  imagem[2][i+1] = '\n';
+  imagem[2][i+2] = '\0';
   
-  imagem3[LIMITE_CARRO+8] = '|';
-  imagem3[LIMITE_CARRO+12] = '|';
-  imagem3[i-2] = ' ';
-  imagem3[i-1]   = ' ';
-  imagem3[i] = '|';
-  imagem3[i+1] = '\n';
-  imagem3[i+2] = '\0';
+  imagem[3][0] = '|';
+  imagem[3][LIMITE_CARRO+8] = '|';
+  imagem[3][LIMITE_CARRO+12] = '|';
+  imagem[3][i-2] = ' ';
+  imagem[3][i-1]   = ' ';
+  imagem[3][i] = '|';
+  imagem[3][i+1] = '\n';
+  imagem[3][i+2] = '\0';
 
-  imagem4[i] = '|';
-  imagem4[i+1] = '\n';
-  imagem4[i+2] = '\0';
+  imagem[4][0] = '|';
+  imagem[4][i] = '|';
+  imagem[4][i+1] = '\n';
+  imagem[4][i+2] = '\0';
 
-  imagem5[i-3] = '-';
-  imagem5[i-2] = '-';
-  imagem5[i-1]   = '-';
-  imagem5[i] = '|';
-  imagem5[i+1] = '\n';
-  imagem5[i+2] = '\0';
+  imagem[5][0] = '|';
+  imagem[5][i-3] = '-';
+  imagem[5][i-2] = '-';
+  imagem[5][i-1]   = '-';
+  imagem[5][i] = '|';
+  imagem[5][i+1] = '\n';
+  imagem[5][i+2] = '\0';
   
-  imagem6[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+5] = '|';
-  imagem6[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+6] = 's';
-  imagem6[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+7] = 'a';
-  imagem6[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+8] = 'i';
-  imagem6[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+9] = 'd';
-  imagem6[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+10] = 'a';
-  imagem6[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+11] = '|';
-  imagem6[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+11+LIMITE_CARRO-1] = '|';
-  imagem6[i] = '|';
-  imagem6[i+1] = '\n';
-  imagem6[i+2] = '\0';
+  imagem[6][0] = '|';
+  imagem[6][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+5] = '|';
+  imagem[6][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+6] = 's';
+  imagem[6][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+7] = 'a';
+  imagem[6][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+8] = 'i';
+  imagem[6][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+9] = 'd';
+  imagem[6][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+10] = 'a';
+  imagem[6][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+11] = '|';
+  imagem[6][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+11+LIMITE_CARRO-1] = '|';
+  imagem[6][i] = '|';
+  imagem[6][i+1] = '\n';
+  imagem[6][i+2] = '\0';
 
-  imagem7[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+5] = '|';
-  imagem7[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+6] = '_';
-  imagem7[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+7] = '_';
-  imagem7[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+8] = '_';
-  imagem7[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+9] = '_';
+  imagem[7][0] = '|';
+  imagem[7][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+5] = '|';
+  imagem[7][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+6] = '_';
+  imagem[7][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+7] = '_';
+  imagem[7][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+8] = '_';
+  imagem[7][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+9] = '_';
   for(j=0;j<LIMITE_CARRO;j++)
-    imagem7[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+10+j] = '_';
-  imagem7[2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+10+LIMITE_CARRO] = '|';
-  imagem7[i] = '|';
-  imagem7[i+1] = '\n';
-  imagem7[i+2] = '\0';
+    imagem[7][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+10+j] = '_';
+  imagem[7][2*LIMITE_CARRO+(LIMITE_CARRO+3)*N_CARROS+10+LIMITE_CARRO] = '|';
+  imagem[7][i] = '|';
+  imagem[7][i+1] = '\n';
+  imagem[7][i+2] = '\0';
   
-  imagem8[i] = '/';
-  imagem8[i+1] = '\n';
-  imagem8[i+2] = '\0';
-  
-  strcpy(imagem[0], imagem0);
-  strcpy(imagem[1], imagem1);
-  strcpy(imagem[2], imagem2);
-  strcpy(imagem[3], imagem3);
-  strcpy(imagem[4], imagem4);
-  strcpy(imagem[5], imagem5);
-  strcpy(imagem[6], imagem6);
-  strcpy(imagem[7], imagem7);
-  strcpy(imagem[8], imagem8);
+  imagem[8][0] = '\\';
+  imagem[8][i] = '/';
+  imagem[8][i+1] = '\n';
+  imagem[8][i+2] = '\0';
 }
 
 void ImprimeImagem(void){
