@@ -73,7 +73,7 @@ void InicializaImagem(void){
 
 /* IMAGEM:
 /  Montanha Russa                                                     \
-|          |entrada|                                                  |
+|            |entrada|                                                |
 |            |   #__________________________________________________  |
 |            |   |\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/  |
 |  |ooooo|  |_____| |_____| |_____| |_____| |_____| |_____| |_____|   |
@@ -107,8 +107,7 @@ void InicializaImagem(void){
 	largura = 40;
 
   for(i=1;i<largura;i++){
-    if(i>16)
-  	  imagem0[i] = ' ';
+  	imagem0[i] = ' ';
     imagem1[i] = ' ';
 	if(i>LIMITE_CARRO+12)
       imagem2[i] = '_';
@@ -132,19 +131,32 @@ void InicializaImagem(void){
     imagem8[i] = ' ';
   }
  
+  imagem0[largura/2-7] = 'M';
+  imagem0[largura/2-6] = 'o';
+  imagem0[largura/2-5] = 'n';
+  imagem0[largura/2-4] = 't';
+  imagem0[largura/2-3] = 'a';
+  imagem0[largura/2-2] = 'n';
+  imagem0[largura/2-1] = 'h';
+  imagem0[largura/2] = 'a';
+  imagem0[largura/2+2] = 'R';
+  imagem0[largura/2+3] = 'u';
+  imagem0[largura/2+4] = 's';
+  imagem0[largura/2+5] = 's';
+  imagem0[largura/2+6] = 'a';
   imagem0[i] = '\\';
   imagem0[i+1] = '\n';
   imagem0[i+2] = '\0';
   
-  imagem1[LIMITE_CARRO+6] = '|';
-  imagem1[LIMITE_CARRO+7] = 'e';
-  imagem1[LIMITE_CARRO+8] = 'n';
-  imagem1[LIMITE_CARRO+9] = 't';
-  imagem1[LIMITE_CARRO+10] = 'r';
-  imagem1[LIMITE_CARRO+11] = 'a';
-  imagem1[LIMITE_CARRO+12] = 'd';
+  imagem1[LIMITE_CARRO+8] = '|';
+  imagem1[LIMITE_CARRO+9] = 'e';
+  imagem1[LIMITE_CARRO+10] = 'n';
+  imagem1[LIMITE_CARRO+11] = 't';
+  imagem1[LIMITE_CARRO+12] = 'r';
   imagem1[LIMITE_CARRO+13] = 'a';
-  imagem1[LIMITE_CARRO+14] = '|';
+  imagem1[LIMITE_CARRO+14] = 'd';
+  imagem1[LIMITE_CARRO+15] = 'a';
+  imagem1[LIMITE_CARRO+16] = '|';
   imagem1[i] = '|';
   imagem1[i+1] = '\n';
   imagem1[i+2] = '\0';
