@@ -122,19 +122,19 @@ void InicializaImagem(void){
   }
  
   imagem[0][0] = '/';
-  imagem[0][largura/2-7] = 'M';
-  imagem[0][largura/2-6] = 'o';
-  imagem[0][largura/2-5] = 'n';
-  imagem[0][largura/2-4] = 't';
-  imagem[0][largura/2-3] = 'a';
-  imagem[0][largura/2-2] = 'n';
-  imagem[0][largura/2-1] = 'h';
-  imagem[0][largura/2] = 'a';
-  imagem[0][largura/2+2] = 'R';
-  imagem[0][largura/2+3] = 'u';
-  imagem[0][largura/2+4] = 's';
-  imagem[0][largura/2+5] = 's';
-  imagem[0][largura/2+6] = 'a';
+/*  imagem[0][largura/2-7] = 'M';
+  imagem[0][largura/2-6] = 'o';*/
+  imagem[0][largura/2-5] = '|';
+  imagem[0][largura/2-4] = 'w';
+  imagem[0][largura/2-3] = 'h';
+  imagem[0][largura/2-2] = 'i';
+  imagem[0][largura/2-1] = 'l';
+  imagem[0][largura/2] = 'e';
+  imagem[0][largura/2+2] = '(';
+  imagem[0][largura/2+3] = '1';
+  imagem[0][largura/2+4] = ')';
+  imagem[0][largura/2+5] = '|';
+  /*imagem[0][largura/2+6] = 'a';*/
   imagem[0][i] = '\\';
   imagem[0][i+1] = '\n';
   imagem[0][i+2] = '\0';
