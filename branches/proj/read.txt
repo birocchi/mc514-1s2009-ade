@@ -18,3 +18,44 @@ rename()
 unlink(pathname) /* decreases the file link count and removes the corresponding directory entry. The file is deleted only when the link count assumes the value 0. */
 
 
+Todos os processadores têm, ao menos, dois estados de execução: um menos privilegiado e outro mais 
+privilegiado (podendo acessar todo o hardware e executar todas as instruções disponíveis). O kernel 
+utiliza essa propriedade e implementa uma abstração que diferencia o que é executado pelos programas 
+"normais" do que é executado pelo próprio kernel (que é, na verdade, um gerenciador de processos, e não 
+um processo em si). Em outras palavras, há a divisão entre os modos de execução "user-mode" e "kernel-
+mode".
+Esse modelo assume que os processos que requerem um serviço do kernel usam uma construção específica 
+denominada CHAMADAS DE SISTEMA.
+Cada chamada de sistema executa a instrução do processador para mudar do user-mode para o kernel-mode.
+(então, pelo que eu entendi, o código da chamada de sistema roda no processador como uma espécie de 
+"super usuário").
+
+[Meio que curiosidade, mas bem interessante...]
+Unix kernels fazem muito mais do que apenas lidar com chamadas de sistema. Por exemplo, rotinas do 
+kernel são ativadas de várias maneiras:
+- Algum processo invoca uma chamada de sistema (como já vimos);
+- O processador que está executando o processo sinaliza uma exceção, dizendo que algo estranho aconteceu 
+(por exemplo, a tentativa de executar uma instrução inválida). O kernel trata a exceção no meio da 
+execução do processo que a gerou;
+- Um dispositivo envia uma interrupção à CPU para notificá-la de um evento (como um pedido de atenção?, 
+uma mudança de status, ou o término de uma operação de I/O). *Cada sinal de interrupção é lidado por um 
+programa do kernel chamado "interrupt handler".* Como os dispositivos funcionam assincronamente em 
+relação ao processador, interrupções acontecem em momentos imprevisíveis;
+- Uma "kernel thread" é executada (em kernel-mode) -> trata-se de processos de médio privilégio, que 
+normalmente criados durante o startup do sistema e continuam vivos até o sistema ser desligado.
+[/fim da curiosidade ^^]
+
+
+------------------------------------------
+
+Perguntas a serem respondidas...
+
+P: Quais as chamadas de sistema mais comuns?
+
+P: Como implementar e usar uma chamada de sistema?
+http://www.tldp.org/HOWTO/html_single/Implement-Sys-Call-Linux-2.6-i386/
+
+
+
+
+------------------------------------------
