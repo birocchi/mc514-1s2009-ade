@@ -1,0 +1,20 @@
+Quando fazemos um programa que precisa usar um recurso do hardware (por exemplo, "ler" o próximo byte 
+de um arquivo aberto: o que significa, fisicamente, acessar uma determinada área do disco rígido e 
+copiar o conteúdo correspondente em um espaço de memória [também endereçado]), 1-) não precisamos nos 
+preocupar com os detalhes do funcionamento do hardware (como o acesso aos setores do HD, o mapeamento 
+da memória, etc.) e 2-) simplesmente fazemos um requerimento ao sistema operacional, que realiza estas 
+tarefas árduas para nós.
+
+
+Algumas chamadas de sistema para manipulação de arquivos...
+
+open()
+creat()
+read()
+write()
+lseek()
+close()
+rename()
+unlink(pathname) /* decreases the file link count and removes the corresponding directory entry. The file is deleted only when the link count assumes the value 0. */
+
+
