@@ -28,7 +28,7 @@ Esse modelo assume que os processos que requerem um serviço do kernel usam uma 
 denominada CHAMADAS DE SISTEMA.
 Cada chamada de sistema executa a instrução do processador para mudar do user-mode para o kernel-mode.
 (então, pelo que eu entendi, o código da chamada de sistema roda no processador como uma espécie de 
-"super usuário").
+"super usuário", o tal do kernel-mode [isto é, pode rodar todas as instruções e acessar tudo do PC]).
 
 [Meio que curiosidade, mas bem interessante...]
 Unix kernels fazem muito mais do que apenas lidar com chamadas de sistema. Por exemplo, rotinas do 
@@ -59,3 +59,88 @@ http://www.tldp.org/HOWTO/html_single/Implement-Sys-Call-Linux-2.6-i386/
 
 
 ------------------------------------------
+
+
+Bem, vou fazendo um resumo/tradução do capítulo de chamadas de sistema.
+
+
+Capítulo 10 - Chamadas de Sistema
+
+O sistema operacional oferece aos processos rodando em user-mode um conjunto de instruções da interface 
+que interage com os dispositivos de hardware (como o CPU, discos e impressora). Algumas vantagens de se 
+ter uma camada entre as aplicações e o hardware:
+1-) É mais fácil programar sem ter de se preocupar com os detalhes do funcionamento do hardware;
+2-) Aumenta muito a segurança do sistema, uma vez que o kernel pode checar a precisão/validez do 
+requerimento à interface antes de realizar a tarefa em si;
+3-) Faz os programas serem mais portáveis, uma vez que eles podem ser compilados e executados em qualquer 
+máquina com um kernel que ofereça o mesmo conjunto de interfaces.
+
+Nos sistemas Unix, este conjunto de interface entre os processos em user-mode e tarefas do kernel associadas 
+aos dispositivos de hardware é denominado chamadas de sistema.
+
+
+
+David, lembra que uma vez eu falei que uma chamada de sistema era comparável a uma API (application programer
+interface)? Bem, na seção 10.1 ele fala sobre a diferença entre uma system call e uma API...
+
+10.1 - POSIX APIs e Chamadas de Sistema
+
+Uma API é uma definição de função que especifica como obter um certo serviço.
+Uma sys-call é um requerimento explícito ao kernel feito via uma "interrupção de software".
+
+Sistemas Unix incluem várias bibliotecas de funções que provém APIs aos programadores.
+Por exemplo, algumas APIs da libc (standart C library) correspondem a rotinas de invólucro (ou empacotadoras), 
+cuja única tarefa é fazer uma chamada de sistema! Então, ao invés de você chamar explicitamente uma sys-call, 
+você chama uma função de uma biblioteca, que internamente chama a sys-call [ainda não estudei direito, mas 
+deve ser algo como chamarmos a função fprintf() pra escrever algo em um arquivo e internamente, essa função 
+chama a sys-call de escrita em arquivo write(), tratando os parâmetros que passamos].
+Normalmente, cada sys-call tem uma rotina de invólucro, que define a API que as aplicações podem dispor.
+
+O padrão POSIX refere-se às APIs e não às sys-calls. Um sistema pode ter um "certificado POSIX" se oferecer aos 
+processos um conjunto de APIs, não importando como as funções são implementadas.
+
+Então, do ponto de vista do programador de uma aplicação, a diferença entre sys-calls e APIs é irrelevante 
+(já que ambas correspondem a funções implementadas que você pode chamar pra realizar uma tarefa). Já do ponto 
+de vista do desenvolvedor do kernel, a diferença é grande: sys-calls pertencem ao kernel e rodam em kernel-mode, 
+enquanto bibliotecas não (rodam em user-mode, podendo chamar internamente alguma(s) sys-call(s)).
+
+
+
+E assim, chegamos à sessão 2...
+
+10.2. System Call Handler and Service Routines
+
+Quando um processo em user-mode invoca uma sys-call, a CPU muda para o kernel-mode e começa a executar instruções 
+da função do kernel. Como veremos, na arquitetura 80x86 uma Linux sys-call pode ser invocada de duas maneiras diferentes.
+O resultado dos dois métodos, no entanto, é um jump para uma rotina em assembly chamada "system call handler".
+
+Cada sys-call tem um número correspondente.
+
+O system call handler realiza as seguintes operações:
+- Salva o conteúdo dos registradores na pilha do kernel-mode (operação comum a todos os sys-calls e implementada em 
+assembly).
+- Trata o system call invocando a função em C correspondente, chamada "system call service routine".
+- Termina o handler: os valores salvos são retornados aos registradores e a CPU é mudada do kernel-mode ao user-mode 
+(operação também é comum a todos os sys-calls e implementada em assembly).
+
+O nome da "service routine" associada ao sys-call xyz() é normalmente sys_xyz(); há, no entanto, algumas exceções.
+
+
+Esqueminha do que acontece no momento de uma chamada de sistema:
+
+((user-mode)) minha função -> chamada da system-call
+((user-mode)) wrapper routine (rotina invólucro)
+<muda o processador para o kernel mode>
+((kernel-mode)) system call handler -> código em assembly que verifica qual chamada se trata e finalmente chama a 
+"system call service routine"
+((kernel-mode)) sys_bla.c -> programa que vai realizar a tarefa da chamada de sistema de fato; ao terminar, retorna 
+ao system call handler
+((kernel-mode)) system call handler -> retorna os registradores, muda o processador para o user-mode e retorna à 
+rotina invólucro
+((user-mode)) wrapper routine retorna à função que a chamou
+((user-mode)) minha função -> continua sua execução
+
+VER O ARQUIVO invoking_a_sys_call.png!!!
+
+
+
